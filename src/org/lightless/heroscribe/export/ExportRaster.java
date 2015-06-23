@@ -27,17 +27,16 @@ import javax.imageio.ImageIO;
 import org.lightless.heroscribe.helper.BoardPainter;
 
 public class ExportRaster {
-	/* format should be either "png" or "jpg" */
-	public static void write(File file, String format, BoardPainter boardPainter) throws Exception {
-		BufferedImage image = new BufferedImage(
-			boardPainter.framePixelSize.width,
-			boardPainter.framePixelSize.height,
-			BufferedImage.TYPE_INT_RGB);
-			
-		Graphics2D g = image.createGraphics();
-		
-		boardPainter.paint(null, 0, 0, g);
-		
-		ImageIO.write(image, format, file);
-	}
+  /* format should be either "png" or "jpg" */
+  public static void write(File file, String format, BoardPainter boardPainter)
+      throws Exception {
+    BufferedImage image = new BufferedImage(boardPainter.framePixelSize.width,
+        boardPainter.framePixelSize.height, BufferedImage.TYPE_INT_RGB);
+
+    Graphics2D g = image.createGraphics();
+
+    boardPainter.paint(null, 0, 0, g);
+
+    ImageIO.write(image, format, file);
+  }
 }

@@ -31,111 +31,111 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-class ObjectSelector extends JPanel implements ItemListener, ListSelectionListener {
-	private Gui gui;
+class ObjectSelector extends JPanel implements ItemListener,
+    ListSelectionListener {
+  private Gui gui;
 
-	private JPanel objectsPanel;
-	private CardLayout cardLayout;	
-	private JComboBox kindsComboBox;
-	private TreeMap kindList;	
-	
-	private String selectedObject;
-	private int objectRotation;
+  private JPanel objectsPanel;
+  private CardLayout cardLayout;
+  private JComboBox kindsComboBox;
+  private TreeMap kindList;
 
-	public ObjectSelector(Gui gui) {
-		super();
-		
-		this.gui = gui;
+  private String selectedObject;
+  private int objectRotation;
 
-		objectsPanel = new JPanel();
-		cardLayout = new CardLayout();
-		kindsComboBox = new JComboBox();
-		kindList = new TreeMap();
-		
-		Iterator iterator;
+  public ObjectSelector(Gui gui) {
+    super();
 
-		selectedObject = null;
+    this.gui = gui;
 
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		objectsPanel.setLayout(cardLayout);
+    objectsPanel = new JPanel();
+    cardLayout = new CardLayout();
+    kindsComboBox = new JComboBox();
+    kindList = new TreeMap();
 
-		add(kindsComboBox);
-		add(objectsPanel);
+    Iterator iterator;
 
-		iterator = gui.getObjects().kindsIterator();
-		while ( iterator.hasNext() ) {
-			Kind kind = (Kind) iterator.next();
+    selectedObject = null;
 
-			JList list = new JList(new DefaultListModel());
+    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+    objectsPanel.setLayout(cardLayout);
 
-			list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    add(kindsComboBox);
+    add(objectsPanel);
 
-			kindList.put(kind.id, list);
+    iterator = gui.getObjects().kindsIterator();
+    while (iterator.hasNext()) {
+      Kind kind = (Kind) iterator.next();
 
-			kindsComboBox.addItem(kind);
+      JList list = new JList(new DefaultListModel());
 
-			objectsPanel.add(new JScrollPane(list), kind.id);
+      list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-			list.addListSelectionListener( this );
-		}
-		
-		iterator = gui.getObjects().objectsIterator();
-		while ( iterator.hasNext() ) {
-			LObject obj = (LObject) iterator.next();
-			
-			JList list = (JList) kindList.get( obj.kind );
-			DefaultListModel listModel = (DefaultListModel) list.getModel();
-			
-			listModel.addElement(obj);
-		}
+      kindList.put(kind.id, list);
 
-		kindsComboBox.addItemListener( this );
-	}
-	
-	public String getSelectedObject() {
-		return selectedObject;
-	}
+      kindsComboBox.addItem(kind);
 
-	public int getSelectedObjectRotation() {
-		return objectRotation;
-	}
+      objectsPanel.add(new JScrollPane(list), kind.id);
 
-	private void setSelectedObject(LObject obj) {
-		if ( obj != null ) {
-			selectedObject = obj.id;
-		} else {
-			selectedObject = null;
-		}
+      list.addListSelectionListener(this);
+    }
 
-		gui.board.resetRotation();
-	}
+    iterator = gui.getObjects().objectsIterator();
+    while (iterator.hasNext()) {
+      LObject obj = (LObject) iterator.next();
 
-	/* -- */
-	
-	public void itemStateChanged(ItemEvent e) {
-		if ( e.getStateChange() == ItemEvent.SELECTED ) {
-			Kind selected;
-			JList list;
-			LObject obj;
-				
-			selected = (Kind) ((JComboBox) e.getSource()).getSelectedItem();
-			cardLayout.show(objectsPanel, selected.id);
-			list = (JList) kindList.get(selected.id);
-				
-			setSelectedObject((LObject) list.getSelectedValue());
-			
-			gui.updateHint();
-		}
-	}
-		
-	public void valueChanged(ListSelectionEvent e) {
-		JList list;
-				
-		list = (JList) e.getSource();
+      JList list = (JList) kindList.get(obj.kind);
+      DefaultListModel listModel = (DefaultListModel) list.getModel();
 
-		setSelectedObject((LObject) list.getSelectedValue());
+      listModel.addElement(obj);
+    }
 
-		gui.updateHint();
-	}
+    kindsComboBox.addItemListener(this);
+  }
+
+  public String getSelectedObject() {
+    return selectedObject;
+  }
+
+  public int getSelectedObjectRotation() {
+    return objectRotation;
+  }
+
+  private void setSelectedObject(LObject obj) {
+    if (obj != null) {
+      selectedObject = obj.id;
+    } else {
+      selectedObject = null;
+    }
+
+    gui.board.resetRotation();
+  }
+
+  /* -- */
+
+  public void itemStateChanged(ItemEvent e) {
+    if (e.getStateChange() == ItemEvent.SELECTED) {
+      Kind selected;
+      JList list;
+      LObject obj;
+
+      selected = (Kind) ((JComboBox) e.getSource()).getSelectedItem();
+      cardLayout.show(objectsPanel, selected.id);
+      list = (JList) kindList.get(selected.id);
+
+      setSelectedObject((LObject) list.getSelectedValue());
+
+      gui.updateHint();
+    }
+  }
+
+  public void valueChanged(ListSelectionEvent e) {
+    JList list;
+
+    list = (JList) e.getSource();
+
+    setSelectedObject((LObject) list.getSelectedValue());
+
+    gui.updateHint();
+  }
 }
-

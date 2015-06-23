@@ -21,35 +21,35 @@ package org.lightless.heroscribe.list;
 import java.util.TreeMap;
 
 public class LObject implements Comparable {
-	public TreeMap region;
-	
-	public String id, name, kind, note;
+  public TreeMap region;
 
-	public int height, width;
-	
-	public float zorder;
-	
-	public boolean door, trap;
-	
-	public LObject() {
-		region = new TreeMap();
-	}
-	
-	public void putIcon(Icon icon, String region) {
-		this.region.put(region, icon);
-	}
+  public String id, name, kind, note;
 
-	public Icon getIcon(String region) {
-		return (Icon) this.region.get(region);
-	}
-	
-	public int compareTo(Object o) {
-		LObject that = (LObject) o;
-		
-		return name.compareTo(that.name);
-	}
+  public int height, width;
 
-	public String toString() {
-		return name;
-	}
+  public float zorder;
+
+  public boolean door, trap;
+
+  public LObject() {
+    region = new TreeMap();
+  }
+
+  public void putIcon(Icon icon, String region) {
+    this.region.put(region, icon);
+  }
+
+  public Icon getIcon(String region) {
+    return (Icon) this.region.get(region);
+  }
+
+  public int compareTo(Object o) {
+    LObject that = (LObject) o;
+
+    return name.compareTo(that.name);
+  }
+
+  public String toString() {
+    return name;
+  }
 }

@@ -24,34 +24,34 @@ import org.lightless.heroscribe.list.List;
 import org.lightless.heroscribe.quest.Quest;
 
 public class ExportPDF {
-	public static void write(File ghostscript, File file, Quest quest, List objects) throws Exception {
-		File eps = File.createTempFile("hsb", ".eps");
-		File pdf = File.createTempFile("hsb", ".pdf");
-		
-		int exitValue;
-		
-		ExportEPS.write(eps, quest, objects);
-		
-		exitValue = Runtime.getRuntime().exec(new String[] {
-			ghostscript.getAbsoluteFile().toString(),
-			"-dBATCH",
-			"-dNOPAUSE",
-			"-sDEVICE=pdfwrite",
-			"-sOutputFile=" + pdf.getAbsolutePath().toString(),
-			eps.getAbsoluteFile().toString()
-		}).waitFor();
+  public static void write(File ghostscript, File file, Quest quest,
+      List objects) throws Exception {
+    File eps = File.createTempFile("hsb", ".eps");
+    File pdf = File.createTempFile("hsb", ".pdf");
 
-		eps.delete();
+    int exitValue;
 
-		if ( exitValue == 0 ) {
-			file.delete();
-			
-			pdf.renameTo(file);
-		} else {
-			pdf.delete();
-			
-			throw new Exception("Process returned " + exitValue + ".");
-		}
-	}
-	
+    ExportEPS.write(eps, quest, objects);
+
+    exitValue = Runtime
+        .getRuntime()
+        .exec(
+            new String[] { ghostscript.getAbsoluteFile().toString(), "-dBATCH",
+                "-dNOPAUSE", "-sDEVICE=pdfwrite",
+                "-sOutputFile=" + pdf.getAbsolutePath().toString(),
+                eps.getAbsoluteFile().toString() }).waitFor();
+
+    eps.delete();
+
+    if (exitValue == 0) {
+      file.delete();
+
+      pdf.renameTo(file);
+    } else {
+      pdf.delete();
+
+      throw new Exception("Process returned " + exitValue + ".");
+    }
+  }
+
 }

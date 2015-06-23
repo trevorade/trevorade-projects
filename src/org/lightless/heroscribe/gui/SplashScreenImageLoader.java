@@ -29,86 +29,84 @@ import javax.swing.*;
 import org.lightless.heroscribe.list.LObject;
 import org.lightless.heroscribe.list.List;
 
-
 public class SplashScreenImageLoader extends JWindow {
-	Image splash;
+  Image splash;
 
-	MediaTracker mt;
-	Toolkit tk;
-	
-	int splashID = 1;
-	
-	public SplashScreenImageLoader(List objects) throws Exception {
-		super();
-		
-		mt = new MediaTracker(this);
-		tk = Toolkit.getDefaultToolkit();
+  MediaTracker mt;
+  Toolkit tk;
 
-		splash = tk.createImage("Splash.jpg");
-		mt.addImage(splash, splashID);
-		
-		mt.waitForID(splashID);
-		if (mt.isErrorID(splashID))
-			throw new Exception("Can't load all PNG icons.");
-		
-		setSize(splash.getWidth(null), splash.getHeight(null));
-		
-		setLocation((tk.getScreenSize().width - this.getWidth()) / 2,
-			(tk.getScreenSize().height - this.getHeight()) / 2);
-		
-		setVisible(true);
-		
-		loadIcons(objects);
+  int splashID = 1;
 
-		setVisible(false);
-	}
-	
-	public void paint(Graphics g) {
-		if ( mt.checkID(splashID) ) {
-			g.drawImage(splash, 0, 0, this);
-		}
-	}
-	
-	private void loadIcons(List objects) throws Exception {
-		Iterator iterator;
-		Image img;
+  public SplashScreenImageLoader(List objects) throws Exception {
+    super();
 
-		long start, end;
+    mt = new MediaTracker(this);
+    tk = Toolkit.getDefaultToolkit();
 
-		start = System.currentTimeMillis();
+    splash = tk.createImage("Splash.jpg");
+    mt.addImage(splash, splashID);
 
-		iterator = objects.objectsIterator();
+    mt.waitForID(splashID);
+    if (mt.isErrorID(splashID))
+      throw new Exception("Can't load all PNG icons.");
 
-		/* Board */
-		img = tk.createImage(objects.getRasterPath("Europe"));
-		objects.getBoard().getIcon("Europe").image = img;
-		mt.addImage(img, 10);
+    setSize(splash.getWidth(null), splash.getHeight(null));
 
-		img = tk.createImage(objects.getRasterPath("USA"));
-		objects.getBoard().getIcon("USA").image = img;
-		mt.addImage(img, 10);
+    setLocation((tk.getScreenSize().width - this.getWidth()) / 2,
+        (tk.getScreenSize().height - this.getHeight()) / 2);
 
-		while (iterator.hasNext()) {
-			String id = ((LObject) iterator.next()).id;
+    setVisible(true);
 
-			/* Icons */
-			img = tk.createImage(objects.getRasterPath(id, "Europe"));
-			objects.getObject(id).getIcon("Europe").image = img;
-			mt.addImage(img, 20);
+    loadIcons(objects);
 
-			img = tk.createImage(objects.getRasterPath(id, "USA"));
-			objects.getObject(id).getIcon("USA").image = img;
-			mt.addImage(img, 20);
-		}
+    setVisible(false);
+  }
 
-		mt.waitForAll();
+  public void paint(Graphics g) {
+    if (mt.checkID(splashID)) {
+      g.drawImage(splash, 0, 0, this);
+    }
+  }
 
-		if (mt.isErrorAny())
-			throw new Exception("Can't load all PNG icons.");
+  private void loadIcons(List objects) throws Exception {
+    Iterator iterator;
+    Image img;
 
-		end = System.currentTimeMillis();
+    long start, end;
 
-		System.err.println(
-			"PNGs loaded (" + String.valueOf(end - start) + "ms).");
-	}
+    start = System.currentTimeMillis();
+
+    iterator = objects.objectsIterator();
+
+    /* Board */
+    img = tk.createImage(objects.getRasterPath("Europe"));
+    objects.getBoard().getIcon("Europe").image = img;
+    mt.addImage(img, 10);
+
+    img = tk.createImage(objects.getRasterPath("USA"));
+    objects.getBoard().getIcon("USA").image = img;
+    mt.addImage(img, 10);
+
+    while (iterator.hasNext()) {
+      String id = ((LObject) iterator.next()).id;
+
+      /* Icons */
+      img = tk.createImage(objects.getRasterPath(id, "Europe"));
+      objects.getObject(id).getIcon("Europe").image = img;
+      mt.addImage(img, 20);
+
+      img = tk.createImage(objects.getRasterPath(id, "USA"));
+      objects.getObject(id).getIcon("USA").image = img;
+      mt.addImage(img, 20);
+    }
+
+    mt.waitForAll();
+
+    if (mt.isErrorAny())
+      throw new Exception("Can't load all PNG icons.");
+
+    end = System.currentTimeMillis();
+
+    System.err.println("PNGs loaded (" + String.valueOf(end - start) + "ms).");
+  }
 }

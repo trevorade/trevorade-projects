@@ -28,100 +28,99 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
 class ToolsPanel extends JPanel implements ItemListener {
-	Gui gui;
-	ObjectSelector selectorPanel;
-	SquareDisplayer displayerPanel;
-	
-	ButtonGroup commands;
-	ItemListener listener;
-	JToggleButton add, select, dark, none;
-	
-	JPanel extraPanel;
-	
-	String selected;
+  Gui gui;
+  ObjectSelector selectorPanel;
+  SquareDisplayer displayerPanel;
 
-	public ToolsPanel(Gui gui) {
-		this.gui = gui;
+  ButtonGroup commands;
+  ItemListener listener;
+  JToggleButton add, select, dark, none;
 
-		setLayout(new BorderLayout());
-		setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+  JPanel extraPanel;
 
-		selected = null;
+  String selected;
 
-		extraPanel = new JPanel();
+  public ToolsPanel(Gui gui) {
+    this.gui = gui;
 
-		commands = new ButtonGroup();
-		
-		add = new JToggleButton("Add object");
-		select = new JToggleButton("Select/Remove object");
-		dark = new JToggleButton("Dark/Bridge");
-		none = new JToggleButton();
-		
-		commands.add(add);
-		commands.add(select);
-		commands.add(dark);
-		commands.add(none);
-		
-		JPanel modePanel = new JPanel();
-		modePanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-		modePanel.setLayout(new GridLayout(3, 1));
-		
-		modePanel.add(add);
-		modePanel.add(select);
-		modePanel.add(dark);
-		
-		selectorPanel = new ObjectSelector(gui);
-		selectorPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-		
-		displayerPanel = new SquareDisplayer(gui);
-		displayerPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-		
-		this.add(modePanel, BorderLayout.NORTH);
-		this.add(extraPanel);
-		
-		extraPanel.setLayout(new CardLayout());
-		
-		extraPanel.add(new JPanel(), "empty");
-		extraPanel.add(selectorPanel, "add");
-		extraPanel.add(displayerPanel, "select");
+    setLayout(new BorderLayout());
+    setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 
-		add.addItemListener(this);
-		select.addItemListener(this);
-		dark.addItemListener(this);
-	}
+    selected = null;
 
-	public void deselectAll() {
-		add.setSelected(false);
-		select.setSelected(false);
-		dark.setSelected(false);
-	}
+    extraPanel = new JPanel();
 
-	public String getCommand() {
-		return selected;
-	}
+    commands = new ButtonGroup();
 
-	public void itemStateChanged(ItemEvent e) {
-		JToggleButton source = (JToggleButton) e.getSource();
-				
-		if ( e.getStateChange() == ItemEvent.SELECTED ) {
-			if ( source == add ) {
-				selected = "add";
-				((CardLayout) extraPanel.getLayout()).show(extraPanel, selected);
-			} else if (source == select) {
-				selected = "select";
-				displayerPanel.clearList();
-				((CardLayout) extraPanel.getLayout()).show(extraPanel, selected);
-			} else if (source == dark) {
-				selected = "darken";
-			} else if (source == none) {
-				selected = null;
-			}
+    add = new JToggleButton("Add object");
+    select = new JToggleButton("Select/Remove object");
+    dark = new JToggleButton("Dark/Bridge");
+    none = new JToggleButton();
 
-			gui.updateHint();
-		} else {
-			selected = null;
-			((CardLayout) extraPanel.getLayout()).show(extraPanel, "empty");
-		}
-	}
+    commands.add(add);
+    commands.add(select);
+    commands.add(dark);
+    commands.add(none);
+
+    JPanel modePanel = new JPanel();
+    modePanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+    modePanel.setLayout(new GridLayout(3, 1));
+
+    modePanel.add(add);
+    modePanel.add(select);
+    modePanel.add(dark);
+
+    selectorPanel = new ObjectSelector(gui);
+    selectorPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+
+    displayerPanel = new SquareDisplayer(gui);
+    displayerPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+
+    this.add(modePanel, BorderLayout.NORTH);
+    this.add(extraPanel);
+
+    extraPanel.setLayout(new CardLayout());
+
+    extraPanel.add(new JPanel(), "empty");
+    extraPanel.add(selectorPanel, "add");
+    extraPanel.add(displayerPanel, "select");
+
+    add.addItemListener(this);
+    select.addItemListener(this);
+    dark.addItemListener(this);
+  }
+
+  public void deselectAll() {
+    add.setSelected(false);
+    select.setSelected(false);
+    dark.setSelected(false);
+  }
+
+  public String getCommand() {
+    return selected;
+  }
+
+  public void itemStateChanged(ItemEvent e) {
+    JToggleButton source = (JToggleButton) e.getSource();
+
+    if (e.getStateChange() == ItemEvent.SELECTED) {
+      if (source == add) {
+        selected = "add";
+        ((CardLayout) extraPanel.getLayout()).show(extraPanel, selected);
+      } else if (source == select) {
+        selected = "select";
+        displayerPanel.clearList();
+        ((CardLayout) extraPanel.getLayout()).show(extraPanel, selected);
+      } else if (source == dark) {
+        selected = "darken";
+      } else if (source == none) {
+        selected = null;
+      }
+
+      gui.updateHint();
+    } else {
+      selected = null;
+      ((CardLayout) extraPanel.getLayout()).show(extraPanel, "empty");
+    }
+  }
 }
-

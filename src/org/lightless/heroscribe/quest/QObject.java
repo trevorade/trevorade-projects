@@ -21,50 +21,51 @@ package org.lightless.heroscribe.quest;
 import org.lightless.heroscribe.list.List;
 
 public class QObject implements Comparable {
-	public String id;
-	public int rotation;
-	public float top, left, zorder;
-	
-	private int order;
-	private static int count = 0;
+  public String id;
+  public int rotation;
+  public float top, left, zorder;
 
-	private List objects;
-	
-	public QObject(String id, List objects) {
-		this.id = id;
-		this.objects = objects;
-		
-		if ( objects.list.containsKey(id) )
-			order = getOrder();
-	}
-	
-	public QObject(String id, List objects, int order) {
-		this.id = id;
-		this.objects = objects;
-		
-		this.order = order; 
-	}
-	
-	synchronized private static int getOrder() {
-		return ++count;
-	}
-	
-	public int compareTo(Object o) {
-		QObject that = (QObject) o;
-		
-		if ( this.zorder < that.zorder )
-			return -1;
-		else if ( this.zorder > that.zorder )
-			return 1;
-		else if ( this.order < that.order )
-			return -1;
-		else if ( this.order > that.order )
-			return 1;
-		
-		return 0;
-	}
-	
-	public String toString() {
-		return objects.getObject(id).toString() + " ( " + Float.toString(zorder) + " )";
-	}
+  private int order;
+  private static int count = 0;
+
+  private List objects;
+
+  public QObject(String id, List objects) {
+    this.id = id;
+    this.objects = objects;
+
+    if (objects.list.containsKey(id))
+      order = getOrder();
+  }
+
+  public QObject(String id, List objects, int order) {
+    this.id = id;
+    this.objects = objects;
+
+    this.order = order;
+  }
+
+  synchronized private static int getOrder() {
+    return ++count;
+  }
+
+  public int compareTo(Object o) {
+    QObject that = (QObject) o;
+
+    if (this.zorder < that.zorder)
+      return -1;
+    else if (this.zorder > that.zorder)
+      return 1;
+    else if (this.order < that.order)
+      return -1;
+    else if (this.order > that.order)
+      return 1;
+
+    return 0;
+  }
+
+  public String toString() {
+    return objects.getObject(id).toString() + " ( " + Float.toString(zorder)
+        + " )";
+  }
 }

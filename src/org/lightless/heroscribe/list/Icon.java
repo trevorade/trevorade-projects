@@ -21,9 +21,9 @@ package org.lightless.heroscribe.list;
 import java.awt.Image;
 
 public class Icon {
-	public String path;
-	public float xoffset, yoffset;
-	public boolean original;
-	
-	public Image image;
+  public String path;
+  public float xoffset, yoffset;
+  public boolean original;
+
+  public Image image;
 }

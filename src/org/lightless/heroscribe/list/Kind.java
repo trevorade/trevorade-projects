@@ -18,35 +18,35 @@
 
 package org.lightless.heroscribe.list;
 
-public class Kind implements Comparable{
-	public String id, name;
+public class Kind implements Comparable {
+  public String id, name;
 
-	private int order;
-	private static int count = 0;
-	
-	public Kind(String id, String name) {
-		this.order = getOrder();
-		
-		this.id = id;
-		this.name = name;
-	}
+  private int order;
+  private static int count = 0;
 
-	synchronized private static int getOrder() {
-		return count++;
-	}
-	
-	public int compareTo(Object o) {
-		Kind that = (Kind) o;
-		
-		if ( this.order < that.order )
-			return -1;
-		else if ( this.order > that.order )
-			return 1;
+  public Kind(String id, String name) {
+    this.order = getOrder();
 
-		return 0;
-	}
+    this.id = id;
+    this.name = name;
+  }
 
-	public String toString() {
-		return name;
-	}
+  synchronized private static int getOrder() {
+    return count++;
+  }
+
+  public int compareTo(Object o) {
+    Kind that = (Kind) o;
+
+    if (this.order < that.order)
+      return -1;
+    else if (this.order > that.order)
+      return 1;
+
+    return 0;
+  }
+
+  public String toString() {
+    return name;
+  }
 }

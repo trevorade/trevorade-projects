@@ -26,207 +26,206 @@ import java.util.Vector;
 import org.lightless.heroscribe.list.LBoard;
 
 public class Quest {
-	private File file;
+  private File file;
 
-	private int width, height;
-	private String name, region, speech;
-	private Vector notes;
+  private int width, height;
+  private String name, region, speech;
+  private Vector notes;
 
-	private QBoard[][] boards;
-	private boolean[][][] horizontalBridges, verticalBridges;
+  private QBoard[][] boards;
+  private boolean[][][] horizontalBridges, verticalBridges;
 
-	private boolean modified;
-	
-	public Quest(int width, int height, LBoard board, File file) {
-		this.width = width;
-		this.height = height;
-		
-		boards = new QBoard[width][height];
-		
-		for ( int i = 0 ; i < width ; i++ )
-			for ( int j = 0 ; j < height ; j++ )
-				boards[i][j] = new QBoard(board.width, board.height, this);
-		
-		horizontalBridges = new boolean[width - 1][height][board.height];
-		verticalBridges = new boolean[width][height - 1][board.width];
+  private boolean modified;
 
-		notes = new Vector();
-		
-		region = "Europe";
+  public Quest(int width, int height, LBoard board, File file) {
+    this.width = width;
+    this.height = height;
 
-		name = "";
-		speech = "";
+    boards = new QBoard[width][height];
 
-		this.file = file;
-		modified = false;
-	}
+    for (int i = 0; i < width; i++)
+      for (int j = 0; j < height; j++)
+        boards[i][j] = new QBoard(board.width, board.height, this);
 
-	public void setHorizontalBridge(boolean value, int column, int row, int top) {
-		if ( 0 <= column && column < width - 1 )
-			horizontalBridges[column][row][top - 1] = value;
-	}
+    horizontalBridges = new boolean[width - 1][height][board.height];
+    verticalBridges = new boolean[width][height - 1][board.width];
 
-	public void setVerticalBridge(boolean value, int column, int row, int left) {
-		if ( 0 <= row && row < height - 1 )
-			verticalBridges[column][row][left - 1] = value;
-	}
+    notes = new Vector();
 
-	public boolean getHorizontalBridge(int column, int row, int top) {
-		return horizontalBridges[column][row][top - 1];
-	}
+    region = "Europe";
 
-	public boolean getVerticalBridge(int column, int row, int left) {
-		return verticalBridges[column][row][left - 1];
-	}
+    name = "";
+    speech = "";
 
-	public QBoard getBoard(int column, int row) {
-		return boards[column][row];
-	}
+    this.file = file;
+    modified = false;
+  }
 
-	public void setBoard(QBoard board, int column, int row) {
-		boards[column][row] = board;
-	}
-	
-	public boolean isModified() {
-		return modified;
-	}
-	
-	public void setModified(boolean mod) {
-		modified = mod;
-	}
+  public void setHorizontalBridge(boolean value, int column, int row, int top) {
+    if (0 <= column && column < width - 1)
+      horizontalBridges[column][row][top - 1] = value;
+  }
 
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String newName) {
-		name = newName;
-		
-		modified = true;
-	}
+  public void setVerticalBridge(boolean value, int column, int row, int left) {
+    if (0 <= row && row < height - 1)
+      verticalBridges[column][row][left - 1] = value;
+  }
 
-	public Iterator objectsIterator() {
-		return new ObjectsIterator(boards);
-	}
+  public boolean getHorizontalBridge(int column, int row, int top) {
+    return horizontalBridges[column][row][top - 1];
+  }
 
-	public Iterator notesIterator() {
-		return notes.iterator();
-	}
+  public boolean getVerticalBridge(int column, int row, int left) {
+    return verticalBridges[column][row][left - 1];
+  }
 
+  public QBoard getBoard(int column, int row) {
+    return boards[column][row];
+  }
 
-	public void addNote(String newNote) {
-		notes.add(newNote);
+  public void setBoard(QBoard board, int column, int row) {
+    boards[column][row] = board;
+  }
 
-		modified = true;
-	}
+  public boolean isModified() {
+    return modified;
+  }
 
-	public String getSpeech() {
-		return speech;
-	}
-	
-	public void setSpeech(String newSpeech) {
-		speech = newSpeech;
+  public void setModified(boolean mod) {
+    modified = mod;
+  }
 
-		modified = true;
-	}
-	
-	public File getFile() {
-		return file;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public void setFile(File newFile) {
-		file = newFile;
-	}
+  public void setName(String newName) {
+    name = newName;
 
-	public int getWidth() {
-		return width;
-	}
+    modified = true;
+  }
 
-	public int getHeight() {
-		return height;
-	}
-	
-	public String getRegion() {
-		return region;
-	}
-	
-	public void setRegion(String newRegion) {
-		if ( !region.equals(newRegion) ) {
-			region = newRegion;
+  public Iterator objectsIterator() {
+    return new ObjectsIterator(boards);
+  }
 
-			modified = true;
-		}
-	}
-	
-	public void save() throws Exception {
-		Write.write(this);
-		
-		modified = false;	
-	}
+  public Iterator notesIterator() {
+    return notes.iterator();
+  }
+
+  public void addNote(String newNote) {
+    notes.add(newNote);
+
+    modified = true;
+  }
+
+  public String getSpeech() {
+    return speech;
+  }
+
+  public void setSpeech(String newSpeech) {
+    speech = newSpeech;
+
+    modified = true;
+  }
+
+  public File getFile() {
+    return file;
+  }
+
+  public void setFile(File newFile) {
+    file = newFile;
+  }
+
+  public int getWidth() {
+    return width;
+  }
+
+  public int getHeight() {
+    return height;
+  }
+
+  public String getRegion() {
+    return region;
+  }
+
+  public void setRegion(String newRegion) {
+    if (!region.equals(newRegion)) {
+      region = newRegion;
+
+      modified = true;
+    }
+  }
+
+  public void save() throws Exception {
+    Write.write(this);
+
+    modified = false;
+  }
 }
 
 class ObjectsIterator implements java.util.Iterator {
-	private QBoard boards[][];
+  private QBoard boards[][];
 
-	private int i, j;
-	private boolean hasEnded; 
-	
-	private Iterator currentBoardIterator;
-                                                                                                                             
-	ObjectsIterator(QBoard[][] boards) {
-		this.boards = boards;
-		
-		currentBoardIterator = null;
-		
-		gotoNext();
-	}
+  private int i, j;
+  private boolean hasEnded;
 
-	private void gotoNext() {
-		if ( currentBoardIterator == null ) {
-			i = j = 0;
-			hasEnded = false;
-		} else {
-			if ( currentBoardIterator.hasNext() )
-				return;
-				
-			j++;
-		}
-				
-		while ( i < boards.length ) {
-			while ( j < boards[i].length ) {
-				if ( boards[i][j] != null ) {
-					currentBoardIterator = boards[i][j].iterator();
-				
-					if ( currentBoardIterator.hasNext() )
-						return;
-				}
-				
-				j++;
-			}
-			
-			i++;
-			j = 0;
-		}
-		
-		hasEnded = true;
-	}
+  private Iterator currentBoardIterator;
 
-	public boolean hasNext() {
-		return !hasEnded;
-	}
+  ObjectsIterator(QBoard[][] boards) {
+    this.boards = boards;
 
-	public Object next() throws NoSuchElementException {
-		if ( hasNext() ) {
-			Object obj = currentBoardIterator.next();
-			
-			gotoNext();
-			
-			return obj;
-		} else
-			throw new NoSuchElementException();
-	}
+    currentBoardIterator = null;
 
-	public void remove() throws UnsupportedOperationException {
-		throw new UnsupportedOperationException();
-	}
+    gotoNext();
+  }
+
+  private void gotoNext() {
+    if (currentBoardIterator == null) {
+      i = j = 0;
+      hasEnded = false;
+    } else {
+      if (currentBoardIterator.hasNext())
+        return;
+
+      j++;
+    }
+
+    while (i < boards.length) {
+      while (j < boards[i].length) {
+        if (boards[i][j] != null) {
+          currentBoardIterator = boards[i][j].iterator();
+
+          if (currentBoardIterator.hasNext())
+            return;
+        }
+
+        j++;
+      }
+
+      i++;
+      j = 0;
+    }
+
+    hasEnded = true;
+  }
+
+  public boolean hasNext() {
+    return !hasEnded;
+  }
+
+  public Object next() throws NoSuchElementException {
+    if (hasNext()) {
+      Object obj = currentBoardIterator.next();
+
+      gotoNext();
+
+      return obj;
+    } else
+      throw new NoSuchElementException();
+  }
+
+  public void remove() throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
+  }
 }

@@ -25,83 +25,85 @@ import java.util.TreeSet;
 import org.lightless.heroscribe.helper.OS;
 
 public class List {
-	public LBoard board;
-	
-	public TreeMap list;
-	public TreeSet kinds;
-	
-	public String version;
-	public String vectorPrefix, vectorSuffix;
-	public String rasterPrefix, rasterSuffix;
-	public String samplePrefix, sampleSuffix;
+  public LBoard board;
 
-	public List() {
-		list = new TreeMap();
-		kinds = new TreeSet();
-	}
+  public TreeMap list;
+  public TreeSet kinds;
 
-	public Iterator objectsIterator() {
-		/* I know it's unefficient, but I need the objects ordered by value, not key
-		 * (i.e. by name, not id) */
-		
-		return new TreeSet(list.values()).iterator();
-	}
+  public String version;
+  public String vectorPrefix, vectorSuffix;
+  public String rasterPrefix, rasterSuffix;
+  public String samplePrefix, sampleSuffix;
 
-	public Iterator kindsIterator() {
-		return kinds.iterator();
-	}
+  public List() {
+    list = new TreeMap();
+    kinds = new TreeSet();
+  }
 
-	public LObject getObject(String id) {
-		return (LObject) list.get(id);
-	}
+  public Iterator objectsIterator() {
+    /*
+     * I know it's unefficient, but I need the objects ordered by value, not key
+     * (i.e. by name, not id)
+     */
 
-	public LBoard getBoard() {
-		return board;
-	}
+    return new TreeSet(list.values()).iterator();
+  }
 
-	public Kind getKind(String id) {
-		Iterator iterator = kindsIterator();
-		Kind found = null;
-		
-		while ( iterator.hasNext() ) {
-			Kind kind = (Kind) iterator.next();
-			if ( id.equals(kind.id) ) {
-				found = kind;
-				break;
-			}
-		}
+  public Iterator kindsIterator() {
+    return kinds.iterator();
+  }
 
-		return (Kind) found;
-	}
-	
-	public String getVectorPath(String id, String region) {
-		return OS.getAbsolutePath(vectorPrefix +
-				getObject(id).getIcon(region).path + vectorSuffix);
-	}
+  public LObject getObject(String id) {
+    return (LObject) list.get(id);
+  }
 
-	public String getRasterPath(String id, String region) {
-		return OS.getAbsolutePath(rasterPrefix +
-				getObject(id).getIcon(region).path + rasterSuffix);
-	}
+  public LBoard getBoard() {
+    return board;
+  }
 
-	public String getSamplePath(String id, String region) {
-		return OS.getAbsolutePath(samplePrefix +
-					getObject(id).getIcon(region).path + sampleSuffix);
-	}
+  public Kind getKind(String id) {
+    Iterator iterator = kindsIterator();
+    Kind found = null;
 
-	public String getVectorPath(String region) {
-		return OS.getAbsolutePath(vectorPrefix +
-				getBoard().getIcon(region).path + vectorSuffix);
-	}
+    while (iterator.hasNext()) {
+      Kind kind = (Kind) iterator.next();
+      if (id.equals(kind.id)) {
+        found = kind;
+        break;
+      }
+    }
 
-	public String getRasterPath(String region) {
-		return OS.getAbsolutePath(rasterPrefix +
-				getBoard().getIcon(region).path + rasterSuffix);
-	}
+    return (Kind) found;
+  }
 
-	public String getSamplePath(String region) {
-		return OS.getAbsolutePath(samplePrefix +
-				getBoard().getIcon(region).path + sampleSuffix);
-	}
+  public String getVectorPath(String id, String region) {
+    return OS.getAbsolutePath(vectorPrefix + getObject(id).getIcon(region).path
+        + vectorSuffix);
+  }
+
+  public String getRasterPath(String id, String region) {
+    return OS.getAbsolutePath(rasterPrefix + getObject(id).getIcon(region).path
+        + rasterSuffix);
+  }
+
+  public String getSamplePath(String id, String region) {
+    return OS.getAbsolutePath(samplePrefix + getObject(id).getIcon(region).path
+        + sampleSuffix);
+  }
+
+  public String getVectorPath(String region) {
+    return OS.getAbsolutePath(vectorPrefix + getBoard().getIcon(region).path
+        + vectorSuffix);
+  }
+
+  public String getRasterPath(String region) {
+    return OS.getAbsolutePath(rasterPrefix + getBoard().getIcon(region).path
+        + rasterSuffix);
+  }
+
+  public String getSamplePath(String region) {
+    return OS.getAbsolutePath(samplePrefix + getBoard().getIcon(region).path
+        + sampleSuffix);
+  }
 
 }

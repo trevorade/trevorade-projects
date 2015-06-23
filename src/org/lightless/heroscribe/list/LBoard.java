@@ -21,29 +21,29 @@ package org.lightless.heroscribe.list;
 import java.util.TreeMap;
 
 public class LBoard {
-	public TreeMap region;
+  public TreeMap region;
 
-	public boolean[][] corridors;	
+  public boolean[][] corridors;
 
-	public int width, height;
-	
-	public float borderDoorsOffset, adjacentBoardsOffset;
-	
-	public LBoard(int width, int height) {
-		region = new TreeMap();
+  public int width, height;
 
-		this.width = width;
-		this.height = height;
+  public float borderDoorsOffset, adjacentBoardsOffset;
 
-		/* Summing 2 for the borders: not really necessary, but... */
-		corridors = new boolean[width + 2][height + 2];
-	}
-	
-	public void putIcon(Icon icon, String region) {
-		this.region.put(region, icon);
-	}
+  public LBoard(int width, int height) {
+    region = new TreeMap();
 
-	public Icon getIcon(String region) {
-		return (Icon) this.region.get(region);
-	}
+    this.width = width;
+    this.height = height;
+
+    /* Summing 2 for the borders: not really necessary, but... */
+    corridors = new boolean[width + 2][height + 2];
+  }
+
+  public void putIcon(Icon icon, String region) {
+    this.region.put(region, icon);
+  }
+
+  public Icon getIcon(String region) {
+    return (Icon) this.region.get(region);
+  }
 }
