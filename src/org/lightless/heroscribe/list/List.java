@@ -27,8 +27,8 @@ import org.lightless.heroscribe.helper.OS;
 public class List {
   public LBoard board;
 
-  public TreeMap list;
-  public TreeSet kinds;
+  public TreeMap<String, LObject> list;
+  public TreeSet<Kind> kinds;
 
   public String version;
   public String vectorPrefix, vectorSuffix;
@@ -36,20 +36,19 @@ public class List {
   public String samplePrefix, sampleSuffix;
 
   public List() {
-    list = new TreeMap();
-    kinds = new TreeSet();
+    list = new TreeMap<>();
+    kinds = new TreeSet<>();
   }
 
-  public Iterator objectsIterator() {
+  public Iterator<LObject> objectsIterator() {
     /*
-     * I know it's unefficient, but I need the objects ordered by value, not key
+     * I know it's inefficient, but I need the objects ordered by value, not key
      * (i.e. by name, not id)
      */
-
-    return new TreeSet(list.values()).iterator();
+    return new TreeSet<>(list.values()).iterator();
   }
 
-  public Iterator kindsIterator() {
+  public Iterator<Kind> kindsIterator() {
     return kinds.iterator();
   }
 
@@ -62,7 +61,7 @@ public class List {
   }
 
   public Kind getKind(String id) {
-    Iterator iterator = kindsIterator();
+    Iterator<Kind> iterator = kindsIterator();
     Kind found = null;
 
     while (iterator.hasNext()) {

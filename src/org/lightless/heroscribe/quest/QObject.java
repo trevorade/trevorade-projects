@@ -20,7 +20,7 @@ package org.lightless.heroscribe.quest;
 
 import org.lightless.heroscribe.list.List;
 
-public class QObject implements Comparable {
+public class QObject implements Comparable<QObject> {
   public String id;
   public int rotation;
   public float top, left, zorder;
@@ -49,9 +49,7 @@ public class QObject implements Comparable {
     return ++count;
   }
 
-  public int compareTo(Object o) {
-    QObject that = (QObject) o;
-
+  public int compareTo(QObject that) {
     if (this.zorder < that.zorder)
       return -1;
     else if (this.zorder > that.zorder)

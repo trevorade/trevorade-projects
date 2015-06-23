@@ -34,14 +34,16 @@ import org.lightless.heroscribe.quest.QObject;
 
 class SquareDisplayer extends JPanel implements ListSelectionListener,
     ActionListener {
+  private static final long serialVersionUID = 3699777730924504997L;
+
   Gui gui;
 
   JTextField zorder;
   JButton set, remove, rotate;
 
-  TreeSet selected;
+  TreeSet<QObject> selected;
 
-  JList list;
+  JList<QObject> list;
   JPanel panel;
 
   int lastColumn, lastRow;
@@ -54,9 +56,9 @@ class SquareDisplayer extends JPanel implements ListSelectionListener,
 
     setLayout(new BorderLayout());
 
-    selected = new TreeSet();
+    selected = new TreeSet<>();
 
-    list = new JList(new DefaultListModel());
+    list = new JList<>(new DefaultListModel<>());
     list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     list.addListSelectionListener(this);
 
@@ -88,7 +90,7 @@ class SquareDisplayer extends JPanel implements ListSelectionListener,
   }
 
   public void clearList() {
-    ((DefaultListModel) list.getModel()).clear();
+    ((DefaultListModel<QObject>) list.getModel()).clear();
   }
 
   public void createList(int column, int row, int left, int top) {
@@ -101,9 +103,9 @@ class SquareDisplayer extends JPanel implements ListSelectionListener,
 
     selected.clear();
 
-    Iterator iterator = gui.getQuest().getBoard(column, row).iterator();
+    Iterator<QObject> iterator = gui.getQuest().getBoard(column, row).iterator();
     while (iterator.hasNext()) {
-      QObject qobj = (QObject) iterator.next();
+      QObject qobj = iterator.next();
       LObject lobj = gui.getObjects().getObject(qobj.id);
 
       if (qobj.rotation % 2 == 0) {
@@ -126,21 +128,22 @@ class SquareDisplayer extends JPanel implements ListSelectionListener,
   public void updateList() {
     clearList();
 
-    Iterator iterator = selected.iterator();
+    Iterator<QObject> iterator = selected.iterator();
     while (iterator.hasNext()) {
-      QObject qobj = (QObject) iterator.next();
+      QObject qobj = iterator.next();
 
-      ((DefaultListModel) list.getModel()).add(0, qobj);
+      ((DefaultListModel<QObject>) list.getModel()).add(0, qobj);
     }
 
-    if (((DefaultListModel) list.getModel()).size() > 0)
+    if (((DefaultListModel<QObject>) list.getModel()).size() > 0)
       list.setSelectedIndex(0);
   }
 
   public void valueChanged(ListSelectionEvent e) {
-    JList list = (JList) e.getSource();
+    @SuppressWarnings("unchecked")
+    JList<QObject> list = (JList<QObject>) e.getSource();
 
-    QObject obj = (QObject) list.getSelectedValue();
+    QObject obj = list.getSelectedValue();
 
     if (obj != null) {
       zorder.setText(Float.toString(obj.zorder));

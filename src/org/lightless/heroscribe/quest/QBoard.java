@@ -6,7 +6,7 @@ import java.util.TreeSet;
 public class QBoard {
   private boolean[][] dark;
 
-  private TreeSet objects;
+  private TreeSet<QObject> objects;
 
   private Quest quest;
 
@@ -17,7 +17,7 @@ public class QBoard {
     this.width = width;
     this.height = height;
 
-    objects = new TreeSet();
+    objects = new TreeSet<>();
 
     dark = new boolean[width][height];
   }
@@ -47,7 +47,7 @@ public class QBoard {
   }
 
   public boolean addObject(QObject newObj) {
-    Iterator iterator = iterator();
+    Iterator<QObject> iterator = iterator();
 
     while (iterator.hasNext()) {
       QObject obj = (QObject) iterator.next();
@@ -73,7 +73,7 @@ public class QBoard {
       return false;
   }
 
-  public Iterator iterator() {
+  public Iterator<QObject> iterator() {
     return objects.iterator();
   }
 

@@ -21,7 +21,7 @@ package org.lightless.heroscribe.list;
 import java.util.TreeMap;
 
 public class LBoard {
-  public TreeMap region;
+  public TreeMap<String, Icon> region;
 
   public boolean[][] corridors;
 
@@ -30,7 +30,7 @@ public class LBoard {
   public float borderDoorsOffset, adjacentBoardsOffset;
 
   public LBoard(int width, int height) {
-    region = new TreeMap();
+    region = new TreeMap<>();
 
     this.width = width;
     this.height = height;
@@ -44,6 +44,6 @@ public class LBoard {
   }
 
   public Icon getIcon(String region) {
-    return (Icon) this.region.get(region);
+    return this.region.get(region);
   }
 }

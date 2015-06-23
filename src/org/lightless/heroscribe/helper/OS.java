@@ -40,11 +40,11 @@ public class OS {
         Runtime.getRuntime().exec(
             "rundll32 url.dll,FileProtocolHandler \"" + url + "\"");
       } else if (isMacOsX()) {
-        Class utils = Class.forName("com.apple.mrj.MRJFileUtils");
+        Class<?> utils = Class.forName("com.apple.mrj.MRJFileUtils");
         Method openURL = utils.getDeclaredMethod("openURL",
             new Class[] { String.class });
 
-        openURL.invoke(null, new String[] { url });
+        openURL.invoke(null, url);
       } else {
         /*
          * sadly, can't think of anything better for gnu/linux, *bsd, etc... If

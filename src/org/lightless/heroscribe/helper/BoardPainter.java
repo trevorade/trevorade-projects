@@ -175,9 +175,9 @@ public class BoardPainter implements ImageObserver {
         QBoard board = gui.getQuest().getBoard(i, j);
 
         /* Objects */
-        Iterator iterator = board.iterator();
+        Iterator<QObject> iterator = board.iterator();
         while (iterator.hasNext()) {
-          QObject obj = (QObject) iterator.next();
+          QObject obj = iterator.next();
 
           drawIcon(obj, i, j, g2d);
         }

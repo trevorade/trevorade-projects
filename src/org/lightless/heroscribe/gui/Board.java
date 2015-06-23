@@ -29,11 +29,12 @@ import java.util.Iterator;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 
 import java.awt.event.MouseEvent;
 
 public class Board extends JPanel implements MouseInputListener {
+  private static final long serialVersionUID = 4115606254945869082L;
+
   private Gui gui;
 
   private int lastRow, lastColumn;
@@ -101,13 +102,13 @@ public class Board extends JPanel implements MouseInputListener {
     return newObject;
   }
 
-  private Image getBoardIcon() {
-    return gui.getObjects().getBoard().getIcon(getRegion()).image;
-  }
+//  private Image getBoardIcon() {
+//    return gui.getObjects().getBoard().getIcon(getRegion()).image;
+//  }
 
-  private String getRegion() {
-    return gui.getQuest().getRegion();
-  }
+//  private String getRegion() {
+//    return gui.getQuest().getRegion();
+//  }
 
   public void resetRotation() {
     rotation = 0;
@@ -205,7 +206,7 @@ public class Board extends JPanel implements MouseInputListener {
       first = false;
     }
 
-    Iterator iterator = gui.getQuest().getBoard(lastColumn, lastRow).iterator();
+    Iterator<QObject> iterator = gui.getQuest().getBoard(lastColumn, lastRow).iterator();
     while (iterator.hasNext()) {
       QObject qobj = (QObject) iterator.next();
       LObject lobj = gui.getObjects().getObject(qobj.id);

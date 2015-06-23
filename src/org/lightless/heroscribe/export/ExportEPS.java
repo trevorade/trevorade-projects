@@ -85,8 +85,8 @@ public class ExportEPS {
   public static void write(File file, Quest quest, List objects)
       throws Exception {
     PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file)));
-    TreeSet set = new TreeSet();
-    Iterator iterator;
+    TreeSet<String> set = new TreeSet<>();
+    Iterator<QObject> iterator;
 
     float bBoxWidth, bBoxHeight;
 
@@ -115,12 +115,12 @@ public class ExportEPS {
         iterator = quest.getBoard(i, j).iterator();
 
         while (iterator.hasNext())
-          set.add(((QObject) iterator.next()).id);
+          set.add(iterator.next().id);
       }
 
-    iterator = set.iterator();
-    while (iterator.hasNext()) {
-      String id = (String) iterator.next();
+    Iterator<String> strIterator = set.iterator();
+    while (strIterator.hasNext()) {
+      String id = strIterator.next();
       int[] boundingBox;
 
       out.println("/Icon" + id + " << /FormType 1 /PaintProc { pop");

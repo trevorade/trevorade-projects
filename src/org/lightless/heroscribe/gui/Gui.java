@@ -41,6 +41,7 @@ import java.util.Vector;
 
 public class Gui extends JFrame implements WindowListener, ItemListener,
     ActionListener {
+  private static final long serialVersionUID = 1027540516394507664L;
 
   private List objects;
   private Quest quest;
@@ -53,7 +54,7 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
 
   JFileChooser fileChooser, ghostscriptChooser;
 
-  TreeMap filters;
+  TreeMap<String, ActualFileFilter> filters;
 
   JRadioButtonMenuItem europeItem, usaItem;
   JMenuItem newKey, openKey, saveKey, saveAsKey, exportPdfKey, exportEpsKey,
@@ -61,7 +62,7 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
 
   JScrollPane scrollPane;
 
-  Vector newSpecialKeys;
+  Vector<SpecialQuestMenuItem> newSpecialKeys;
 
   JLabel hint, status;
 
@@ -73,7 +74,7 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
     this.objects = objects;
     this.quest = quest;
 
-    filters = new TreeMap();
+    filters = new TreeMap<>();
 
     ghostscriptChooser = new JFileChooser();
     ghostscriptChooser.setFileFilter(new GhostScriptFileFilter());
@@ -90,7 +91,7 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
     tools = new ToolsPanel(this);
     board = new Board(this);
 
-    newSpecialKeys = new Vector();
+    newSpecialKeys = new Vector<>();
     newSpecialKeys.add(new SpecialQuestMenuItem(1, 2));
     newSpecialKeys.add(new SpecialQuestMenuItem(2, 1));
     newSpecialKeys.add(new SpecialQuestMenuItem(2, 2));
@@ -483,8 +484,6 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
         }
       }
     } else if (source == ghostscriptKey) {
-      File file;
-
       ghostscriptChooser.setSelectedFile(prefs.ghostscriptExec);
 
       if (ghostscriptChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
@@ -634,6 +633,8 @@ class ActualFileFilter extends FileFilter {
 }
 
 class SpecialQuestMenuItem extends JMenuItem {
+  private static final long serialVersionUID = -8853825228925019854L;
+
   private int questWidth, questHeight;
 
   public SpecialQuestMenuItem(int questWidth, int questHeight) {

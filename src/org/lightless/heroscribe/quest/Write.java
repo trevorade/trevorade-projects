@@ -66,7 +66,7 @@ public class Write {
               out.println("<dark left=\"" + left + "\" top=\"" + top
                   + "\" width=\"1\" height=\"1\" />");
 
-        Iterator iterator = board.iterator();
+        Iterator<QObject> iterator = board.iterator();
         while (iterator.hasNext()) {
           QObject obj = (QObject) iterator.next();
 
@@ -116,9 +116,9 @@ public class Write {
 
     out.println("<speech>" + xmlEscape(quest.getSpeech()) + "</speech>");
 
-    Iterator iterator = quest.notesIterator();
+    Iterator<String> iterator = quest.notesIterator();
     while (iterator.hasNext())
-      out.println("<note>" + xmlEscape((String) iterator.next()) + "</note>");
+      out.println("<note>" + xmlEscape(iterator.next()) + "</note>");
 
     out.println("</quest>");
 

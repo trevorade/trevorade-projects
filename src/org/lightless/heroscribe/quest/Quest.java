@@ -30,7 +30,7 @@ public class Quest {
 
   private int width, height;
   private String name, region, speech;
-  private Vector notes;
+  private Vector<String> notes;
 
   private QBoard[][] boards;
   private boolean[][][] horizontalBridges, verticalBridges;
@@ -50,7 +50,7 @@ public class Quest {
     horizontalBridges = new boolean[width - 1][height][board.height];
     verticalBridges = new boolean[width][height - 1][board.width];
 
-    notes = new Vector();
+    notes = new Vector<>();
 
     region = "Europe";
 
@@ -105,11 +105,11 @@ public class Quest {
     modified = true;
   }
 
-  public Iterator objectsIterator() {
+  public Iterator<QObject> objectsIterator() {
     return new ObjectsIterator(boards);
   }
 
-  public Iterator notesIterator() {
+  public Iterator<String> notesIterator() {
     return notes.iterator();
   }
 
@@ -164,13 +164,13 @@ public class Quest {
   }
 }
 
-class ObjectsIterator implements java.util.Iterator {
+class ObjectsIterator implements java.util.Iterator<QObject> {
   private QBoard boards[][];
 
   private int i, j;
   private boolean hasEnded;
 
-  private Iterator currentBoardIterator;
+  private Iterator<QObject> currentBoardIterator;
 
   ObjectsIterator(QBoard[][] boards) {
     this.boards = boards;
@@ -214,9 +214,9 @@ class ObjectsIterator implements java.util.Iterator {
     return !hasEnded;
   }
 
-  public Object next() throws NoSuchElementException {
+  public QObject next() throws NoSuchElementException {
     if (hasNext()) {
-      Object obj = currentBoardIterator.next();
+      QObject obj = currentBoardIterator.next();
 
       gotoNext();
 

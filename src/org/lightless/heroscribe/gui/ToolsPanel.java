@@ -28,6 +28,8 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
 class ToolsPanel extends JPanel implements ItemListener {
+  private static final long serialVersionUID = -3651474373588612642L;
+
   Gui gui;
   ObjectSelector selectorPanel;
   SquareDisplayer displayerPanel;
