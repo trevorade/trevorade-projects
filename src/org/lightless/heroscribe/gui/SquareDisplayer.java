@@ -22,10 +22,16 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Iterator;
 import java.util.TreeSet;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -103,9 +109,7 @@ class SquareDisplayer extends JPanel implements ListSelectionListener,
 
     selected.clear();
 
-    Iterator<QObject> iterator = gui.getQuest().getBoard(column, row).iterator();
-    while (iterator.hasNext()) {
-      QObject qobj = iterator.next();
+    for (QObject qobj : gui.getQuest().getBoard(column, row).objectsIterable()) {
       LObject lobj = gui.getObjects().getObject(qobj.id);
 
       if (qobj.rotation % 2 == 0) {
@@ -128,10 +132,7 @@ class SquareDisplayer extends JPanel implements ListSelectionListener,
   public void updateList() {
     clearList();
 
-    Iterator<QObject> iterator = selected.iterator();
-    while (iterator.hasNext()) {
-      QObject qobj = iterator.next();
-
+    for (QObject qobj : selected) {
       ((DefaultListModel<QObject>) list.getModel()).add(0, qobj);
     }
 

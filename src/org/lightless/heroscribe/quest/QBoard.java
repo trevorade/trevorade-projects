@@ -47,11 +47,7 @@ public class QBoard {
   }
 
   public boolean addObject(QObject newObj) {
-    Iterator<QObject> iterator = iterator();
-
-    while (iterator.hasNext()) {
-      QObject obj = (QObject) iterator.next();
-
+    for (QObject obj : objects) {
       if (obj.left == newObj.left && obj.top == newObj.top
           && obj.rotation == newObj.rotation && obj.id.equals(newObj.id))
         return false;
@@ -73,8 +69,12 @@ public class QBoard {
       return false;
   }
 
-  public Iterator<QObject> iterator() {
-    return objects.iterator();
+  public Iterable<QObject> objectsIterable() {
+    return new Iterable<QObject>() {
+      @Override
+      public Iterator<QObject> iterator() {
+        return objects.iterator();
+      }
+    };
   }
-
 }

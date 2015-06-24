@@ -21,9 +21,6 @@ package org.lightless.heroscribe.quest;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.util.Iterator;
-
-import org.lightless.heroscribe.quest.Quest;
 
 public class Write {
   private static String xmlEscape(String in) {
@@ -66,10 +63,7 @@ public class Write {
               out.println("<dark left=\"" + left + "\" top=\"" + top
                   + "\" width=\"1\" height=\"1\" />");
 
-        Iterator<QObject> iterator = board.iterator();
-        while (iterator.hasNext()) {
-          QObject obj = (QObject) iterator.next();
-
+        for (QObject obj : board.objectsIterable()) {
           out.print("<object id=\"" + obj.id + "\" ");
           out.print("left=\"" + obj.left + "\" top=\"" + obj.top + "\" ");
           out.print("rotation=\"");
@@ -116,9 +110,8 @@ public class Write {
 
     out.println("<speech>" + xmlEscape(quest.getSpeech()) + "</speech>");
 
-    Iterator<String> iterator = quest.notesIterator();
-    while (iterator.hasNext())
-      out.println("<note>" + xmlEscape(iterator.next()) + "</note>");
+    for (String note : quest.notesIterable())
+      out.println("<note>" + xmlEscape(note) + "</note>");
 
     out.println("</quest>");
 

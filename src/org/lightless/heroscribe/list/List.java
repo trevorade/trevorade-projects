@@ -19,7 +19,6 @@
 package org.lightless.heroscribe.list;
 
 import java.util.TreeMap;
-import java.util.Iterator;
 import java.util.TreeSet;
 
 import org.lightless.heroscribe.helper.OS;
@@ -40,16 +39,16 @@ public class List {
     kinds = new TreeSet<>();
   }
 
-  public Iterator<LObject> objectsIterator() {
+  public Iterable<LObject> objectsIterable() {
     /*
      * I know it's inefficient, but I need the objects ordered by value, not key
      * (i.e. by name, not id)
      */
-    return new TreeSet<>(list.values()).iterator();
+    return new TreeSet<>(list.values());
   }
 
-  public Iterator<Kind> kindsIterator() {
-    return kinds.iterator();
+  public Iterable<Kind> kindsIterable() {
+    return kinds;
   }
 
   public LObject getObject(String id) {
@@ -61,18 +60,12 @@ public class List {
   }
 
   public Kind getKind(String id) {
-    Iterator<Kind> iterator = kindsIterator();
-    Kind found = null;
-
-    while (iterator.hasNext()) {
-      Kind kind = (Kind) iterator.next();
+    for (Kind kind : kinds) {
       if (id.equals(kind.id)) {
-        found = kind;
-        break;
+        return kind;
       }
     }
-
-    return (Kind) found;
+    return null;
   }
 
   public String getVectorPath(String id, String region) {

@@ -105,12 +105,17 @@ public class Quest {
     modified = true;
   }
 
-  public Iterator<QObject> objectsIterator() {
-    return new ObjectsIterator(boards);
+  public Iterable<QObject> objectsIterable() {
+    return new Iterable<QObject>() {
+      @Override
+      public Iterator<QObject> iterator() {
+        return new ObjectsIterator(boards);
+      }
+    };
   }
 
-  public Iterator<String> notesIterator() {
-    return notes.iterator();
+  public Iterable<String> notesIterable() {
+    return notes;
   }
 
   public void addNote(String newNote) {
@@ -187,14 +192,13 @@ class ObjectsIterator implements java.util.Iterator<QObject> {
     } else {
       if (currentBoardIterator.hasNext())
         return;
-
       j++;
     }
 
     while (i < boards.length) {
       while (j < boards[i].length) {
         if (boards[i][j] != null) {
-          currentBoardIterator = boards[i][j].iterator();
+          currentBoardIterator = boards[i][j].objectsIterable().iterator();
 
           if (currentBoardIterator.hasNext())
             return;
@@ -217,9 +221,7 @@ class ObjectsIterator implements java.util.Iterator<QObject> {
   public QObject next() throws NoSuchElementException {
     if (hasNext()) {
       QObject obj = currentBoardIterator.next();
-
       gotoNext();
-
       return obj;
     } else
       throw new NoSuchElementException();

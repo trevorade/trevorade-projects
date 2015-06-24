@@ -22,9 +22,8 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Toolkit;
-import java.util.Iterator;
 
-import javax.swing.*;
+import javax.swing.JWindow;
 
 import org.lightless.heroscribe.list.LObject;
 import org.lightless.heroscribe.list.List;
@@ -71,14 +70,11 @@ public class SplashScreenImageLoader extends JWindow {
   }
 
   private void loadIcons(List objects) throws Exception {
-    Iterator<LObject> iterator;
     Image img;
 
     long start, end;
 
     start = System.currentTimeMillis();
-
-    iterator = objects.objectsIterator();
 
     /* Board */
     img = tk.createImage(objects.getRasterPath("Europe"));
@@ -89,8 +85,8 @@ public class SplashScreenImageLoader extends JWindow {
     objects.getBoard().getIcon("USA").image = img;
     mt.addImage(img, 10);
 
-    while (iterator.hasNext()) {
-      String id = iterator.next().id;
+    for (LObject object : objects.objectsIterable()) {
+      String id = object.id;
 
       /* Icons */
       img = tk.createImage(objects.getRasterPath(id, "Europe"));

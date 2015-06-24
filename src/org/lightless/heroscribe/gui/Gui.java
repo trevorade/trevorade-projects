@@ -18,14 +18,6 @@
 
 package org.lightless.heroscribe.gui;
 
-import org.lightless.heroscribe.*;
-import org.lightless.heroscribe.helper.*;
-import org.lightless.heroscribe.list.*;
-import org.lightless.heroscribe.quest.*;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Toolkit;
@@ -38,6 +30,27 @@ import java.awt.event.WindowListener;
 import java.io.File;
 import java.util.TreeMap;
 import java.util.Vector;
+
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileFilter;
+
+import org.lightless.heroscribe.Preferences;
+import org.lightless.heroscribe.helper.BoardPainter;
+import org.lightless.heroscribe.helper.OS;
+import org.lightless.heroscribe.list.List;
+import org.lightless.heroscribe.quest.Quest;
 
 public class Gui extends JFrame implements WindowListener, ItemListener,
     ActionListener {

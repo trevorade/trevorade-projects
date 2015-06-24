@@ -18,20 +18,18 @@
 
 package org.lightless.heroscribe.helper;
 
-import org.lightless.heroscribe.Constants;
-import org.lightless.heroscribe.gui.Gui;
-import org.lightless.heroscribe.list.LObject;
-import org.lightless.heroscribe.quest.*;
-
-import java.util.Iterator;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
-
 import java.awt.geom.AffineTransform;
 import java.awt.image.ImageObserver;
+
+import org.lightless.heroscribe.Constants;
+import org.lightless.heroscribe.gui.Gui;
+import org.lightless.heroscribe.list.LObject;
+import org.lightless.heroscribe.quest.QBoard;
+import org.lightless.heroscribe.quest.QObject;
 
 public class BoardPainter implements ImageObserver {
   private Gui gui;
@@ -175,10 +173,7 @@ public class BoardPainter implements ImageObserver {
         QBoard board = gui.getQuest().getBoard(i, j);
 
         /* Objects */
-        Iterator<QObject> iterator = board.iterator();
-        while (iterator.hasNext()) {
-          QObject obj = iterator.next();
-
+        for (QObject obj : board.objectsIterable()) {
           drawIcon(obj, i, j, g2d);
         }
       }

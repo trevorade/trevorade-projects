@@ -20,11 +20,13 @@ import java.io.File;
 
 import javax.swing.UIManager;
 
-import org.lightless.heroscribe.*;
+import org.lightless.heroscribe.Constants;
+import org.lightless.heroscribe.Preferences;
+import org.lightless.heroscribe.gui.Gui;
+import org.lightless.heroscribe.gui.SplashScreenImageLoader;
 import org.lightless.heroscribe.helper.OS;
-import org.lightless.heroscribe.gui.*;
-import org.lightless.heroscribe.list.*;
-import org.lightless.heroscribe.quest.*;
+import org.lightless.heroscribe.list.List;
+import org.lightless.heroscribe.quest.Quest;
 
 public class HeroScribe {
   public static void main(String args[]) {

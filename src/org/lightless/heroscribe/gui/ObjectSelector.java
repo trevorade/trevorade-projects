@@ -18,18 +18,23 @@
 
 package org.lightless.heroscribe.gui;
 
-import org.lightless.heroscribe.list.Kind;
-import org.lightless.heroscribe.list.LObject;
-
 import java.awt.CardLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.Iterator;
 import java.util.TreeMap;
 
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
+import javax.swing.JComboBox;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import org.lightless.heroscribe.list.Kind;
+import org.lightless.heroscribe.list.LObject;
 
 class ObjectSelector extends JPanel implements ItemListener,
     ListSelectionListener {
@@ -55,8 +60,6 @@ class ObjectSelector extends JPanel implements ItemListener,
     kindsComboBox = new JComboBox<>();
     kindList = new TreeMap<>();
 
-    Iterator<Kind> kindIterator;
-
     selectedObject = null;
 
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -65,10 +68,7 @@ class ObjectSelector extends JPanel implements ItemListener,
     add(kindsComboBox);
     add(objectsPanel);
 
-    kindIterator = gui.getObjects().kindsIterator();
-    while (kindIterator.hasNext()) {
-      Kind kind = (Kind) kindIterator.next();
-
+    for (Kind kind : gui.getObjects().kindsIterable()) {
       JList<LObject> list = new JList<>(new DefaultListModel<>());
 
       list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -82,10 +82,7 @@ class ObjectSelector extends JPanel implements ItemListener,
       list.addListSelectionListener(this);
     }
 
-    Iterator<LObject> iterator = gui.getObjects().objectsIterator();
-    while (iterator.hasNext()) {
-      LObject obj = (LObject) iterator.next();
-
+    for (LObject obj : gui.getObjects().objectsIterable()) {
       JList<LObject> list = kindList.get(obj.kind);
       DefaultListModel<LObject> listModel = (DefaultListModel<LObject>) list.getModel();
 

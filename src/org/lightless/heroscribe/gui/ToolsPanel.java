@@ -24,7 +24,10 @@ import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 import javax.swing.border.EtchedBorder;
 
 class ToolsPanel extends JPanel implements ItemListener {

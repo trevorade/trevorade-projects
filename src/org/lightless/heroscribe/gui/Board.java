@@ -18,19 +18,18 @@
 
 package org.lightless.heroscribe.gui;
 
-import org.lightless.heroscribe.list.LObject;
-import org.lightless.heroscribe.quest.*;
-
-import javax.swing.*;
-import javax.swing.event.MouseInputListener;
-
-import java.util.Iterator;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-
 import java.awt.event.MouseEvent;
+
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.event.MouseInputListener;
+
+import org.lightless.heroscribe.list.LObject;
+import org.lightless.heroscribe.quest.QBoard;
+import org.lightless.heroscribe.quest.QObject;
 
 public class Board extends JPanel implements MouseInputListener {
   private static final long serialVersionUID = 4115606254945869082L;
@@ -206,9 +205,7 @@ public class Board extends JPanel implements MouseInputListener {
       first = false;
     }
 
-    Iterator<QObject> iterator = gui.getQuest().getBoard(lastColumn, lastRow).iterator();
-    while (iterator.hasNext()) {
-      QObject qobj = (QObject) iterator.next();
+    for (QObject qobj : gui.getQuest().getBoard(lastColumn, lastRow).objectsIterable()) {
       LObject lobj = gui.getObjects().getObject(qobj.id);
 
       if (qobj.rotation % 2 == 0) {

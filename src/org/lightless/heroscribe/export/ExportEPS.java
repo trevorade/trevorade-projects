@@ -25,7 +25,6 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.Iterator;
 import java.util.TreeSet;
 import java.util.zip.GZIPInputStream;
 
@@ -86,7 +85,6 @@ public class ExportEPS {
       throws Exception {
     PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file)));
     TreeSet<String> set = new TreeSet<>();
-    Iterator<QObject> iterator;
 
     float bBoxWidth, bBoxHeight;
 
@@ -112,15 +110,11 @@ public class ExportEPS {
 
     for (int i = 0; i < quest.getWidth(); i++)
       for (int j = 0; j < quest.getHeight(); j++) {
-        iterator = quest.getBoard(i, j).iterator();
-
-        while (iterator.hasNext())
-          set.add(iterator.next().id);
+        for (QObject qObject : quest.getBoard(i, j).objectsIterable())
+          set.add(qObject.id);
       }
 
-    Iterator<String> strIterator = set.iterator();
-    while (strIterator.hasNext()) {
-      String id = strIterator.next();
+    for (String id : set) {
       int[] boundingBox;
 
       out.println("/Icon" + id + " << /FormType 1 /PaintProc { pop");
@@ -187,9 +181,7 @@ public class ExportEPS {
         out.println(column + " " + (quest.getHeight() - row - 1)
             + " StartBoard");
 
-        iterator = board.iterator();
-        while (iterator.hasNext()) {
-          QObject obj = (QObject) iterator.next();
+        for (QObject obj : board.objectsIterable()) {
           int width, height;
           float x, y, xoffset, yoffset;
 
