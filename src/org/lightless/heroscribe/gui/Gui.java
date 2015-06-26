@@ -49,6 +49,7 @@ import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileFilter;
 
+import org.lightless.heroscribe.Command;
 import org.lightless.heroscribe.Preferences;
 import org.lightless.heroscribe.Region;
 import org.lightless.heroscribe.helper.BoardPainter;
@@ -337,21 +338,30 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
   }
 
   public void updateHint() {
-    if ("add".equals(tools.getCommand())) {
+    switch (tools.getCommand()) {
+    case ADD:
       if (tools.selectorPanel.getSelectedObject() == null) {
         hint.setText("Select an object.");
       } else {
         hint.setText("Click on a square to add. Right Click or CTRL Click to turn.");
       }
-    } else if ("select".equals(tools.getCommand())) {
-      hint.setText("Click on a square to select it.");
-    } else if ("darken".equals(tools.getCommand())) {
-      hint.setText("Click to darken a square or to add a bridge. Right Click or CTRL Click to clear.");
+      break;
 
-    } else if (tools.getCommand() == null) {
+    case SELECT:
+      hint.setText("Click on a square to select it.");
+      break;
+
+    case DARKEN:
+      hint.setText("Click to darken a square or to add a bridge. Right Click or CTRL Click to clear.");
+      break;
+
+    case NONE:
       hint.setText("Select a command.");
-    } else {
+      break;
+
+    default:
       hint.setText("!! COMMAND WITHOUT HINTS !!");
+      break;
     }
   }
 
@@ -526,7 +536,7 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
     } else if (source == listKey) {
       String object = tools.selectorPanel.getSelectedObject();
 
-      if ("add".equals(tools.getCommand()) && object != null)
+      if (tools.getCommand() == Command.ADD && object != null)
         org.lightless.heroscribe.helper.OS.openURL(new File("Objects.html"),
             "object_" + object);
       else

@@ -30,6 +30,8 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.border.EtchedBorder;
 
+import org.lightless.heroscribe.Command;
+
 class ToolsPanel extends JPanel implements ItemListener {
   private static final long serialVersionUID = -3651474373588612642L;
 
@@ -43,7 +45,7 @@ class ToolsPanel extends JPanel implements ItemListener {
 
   JPanel extraPanel;
 
-  String selected;
+  private Command selected;
 
   public ToolsPanel(Gui gui) {
     this.gui = gui;
@@ -51,7 +53,7 @@ class ToolsPanel extends JPanel implements ItemListener {
     setLayout(new BorderLayout());
     setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 
-    selected = null;
+    selected = Command.NONE;
 
     extraPanel = new JPanel();
 
@@ -87,8 +89,8 @@ class ToolsPanel extends JPanel implements ItemListener {
     extraPanel.setLayout(new CardLayout());
 
     extraPanel.add(new JPanel(), "empty");
-    extraPanel.add(selectorPanel, "add");
-    extraPanel.add(displayerPanel, "select");
+    extraPanel.add(selectorPanel, Command.ADD.toString());
+    extraPanel.add(displayerPanel, Command.SELECT.toString());
 
     add.addItemListener(this);
     select.addItemListener(this);
@@ -101,7 +103,7 @@ class ToolsPanel extends JPanel implements ItemListener {
     dark.setSelected(false);
   }
 
-  public String getCommand() {
+  public Command getCommand() {
     return selected;
   }
 
@@ -110,21 +112,21 @@ class ToolsPanel extends JPanel implements ItemListener {
 
     if (e.getStateChange() == ItemEvent.SELECTED) {
       if (source == add) {
-        selected = "add";
-        ((CardLayout) extraPanel.getLayout()).show(extraPanel, selected);
+        selected = Command.ADD;
+        ((CardLayout) extraPanel.getLayout()).show(extraPanel, selected.toString());
       } else if (source == select) {
-        selected = "select";
+        selected = Command.SELECT;
         displayerPanel.clearList();
-        ((CardLayout) extraPanel.getLayout()).show(extraPanel, selected);
+        ((CardLayout) extraPanel.getLayout()).show(extraPanel, selected.toString());
       } else if (source == dark) {
-        selected = "darken";
+        selected = Command.DARKEN;
       } else if (source == none) {
-        selected = null;
+        selected = Command.NONE;
       }
 
       gui.updateHint();
     } else {
-      selected = null;
+      selected = Command.NONE;
       ((CardLayout) extraPanel.getLayout()).show(extraPanel, "empty");
     }
   }

@@ -27,6 +27,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputListener;
 
+import org.lightless.heroscribe.Command;
 import org.lightless.heroscribe.list.LObject;
 import org.lightless.heroscribe.quest.QBoard;
 import org.lightless.heroscribe.quest.QObject;
@@ -71,7 +72,7 @@ public class Board extends JPanel implements MouseInputListener {
   public void paintComponent(Graphics g) {
     super.paintComponent(g);
 
-    if (!hasAdded && "add".equals(gui.tools.getCommand())
+    if (!hasAdded && gui.tools.getCommand() == Command.ADD
         && gui.tools.selectorPanel.getSelectedObject() != null)
       gui.boardPainter.paint(getNewObject(true), lastColumn, lastRow,
           (Graphics2D) g);
@@ -249,7 +250,8 @@ public class Board extends JPanel implements MouseInputListener {
   public void mousePressed(MouseEvent e) {
     updatePosition(e);
 
-    if ("add".equals(gui.tools.getCommand())) {
+    switch (gui.tools.getCommand()) {
+    case ADD:
       if (SwingUtilities.isRightMouseButton(e) || e.isControlDown()) {
         /* right click or (ctrl + click) (for mac's single button mice) */
         rotation = (rotation + 1) % 4;
@@ -261,10 +263,14 @@ public class Board extends JPanel implements MouseInputListener {
           if (gui.getQuest().getBoard(lastColumn, lastRow).addObject(obj))
             hasAdded = true;
       }
-    } else if ("select".equals(gui.tools.getCommand())) {
+      break;
+      
+    case SELECT:
       gui.tools.displayerPanel.createList(lastColumn, lastRow, lastLeft,
           lastTop);
-    } else if ("darken".equals(gui.tools.getCommand())) {
+      break;
+      
+    case DARKEN:
       QBoard board = gui.getQuest().getBoard(lastColumn, lastRow);
 
       if (1 <= lastLeft && lastLeft <= board.getWidth() && 1 <= lastTop
@@ -313,6 +319,10 @@ public class Board extends JPanel implements MouseInputListener {
           gui.getQuest().setVerticalBridge(value, column, row, lastLeft);
         }
       }
+      break;
+
+    default:
+      break;
     }
 
     repaint();
