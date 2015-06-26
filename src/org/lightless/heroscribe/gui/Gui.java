@@ -28,9 +28,11 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
+import java.util.Collections;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JFileChooser;
@@ -43,10 +45,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
+import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileFilter;
 
 import org.lightless.heroscribe.Preferences;
+import org.lightless.heroscribe.Region;
 import org.lightless.heroscribe.helper.BoardPainter;
 import org.lightless.heroscribe.helper.OS;
 import org.lightless.heroscribe.list.List;
@@ -69,7 +73,7 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
 
   TreeMap<String, ActualFileFilter> filters;
 
-  JRadioButtonMenuItem europeItem, usaItem;
+  ButtonGroup regionGroup;
   JMenuItem newKey, openKey, saveKey, saveAsKey, exportPdfKey, exportEpsKey,
       exportPngKey, ghostscriptKey, quitKey, listKey, aboutKey;
 
@@ -160,8 +164,6 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
 
     JPanel bottom = new JPanel();
 
-    ButtonGroup regionGroup = new ButtonGroup();
-
     /* New Menu */
     newKey = new JMenuItem("Quest");
     newKey.addActionListener(this);
@@ -225,12 +227,16 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
     menu.add(file);
 
     /* Region menu */
-    europeItem = new JRadioButtonMenuItem("Europe layout");
+    regionGroup = new ButtonGroup();  // Makes menu items act as Radio selector.
+
+    JRadioButtonMenuItem europeItem = new JRadioButtonMenuItem("Europe layout");
+    europeItem.setModel(new RegionButtonModel(Region.EUROPE));
     europeItem.addItemListener(this);
     regionGroup.add(europeItem);
     region.add(europeItem);
 
-    usaItem = new JRadioButtonMenuItem("USA layout");
+    JRadioButtonMenuItem usaItem = new JRadioButtonMenuItem("USA layout");
+    usaItem.setModel(new RegionButtonModel(Region.USA));
     usaItem.addItemListener(this);
     regionGroup.add(usaItem);
     region.add(usaItem);
@@ -283,14 +289,26 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
 
     /* --- */
 
-    this.setSize(640, 480);
+    setSize(1135, 785);
+  }
+
+  private Region getMenuRegion() {
+    for (AbstractButton menuItem : Collections.list(regionGroup.getElements())) {
+      if (menuItem.isSelected()) {
+        RegionButtonModel model = (RegionButtonModel) menuItem.getModel();
+        return model.getRegion();
+      }
+    }
+    return Region.EUROPE;
   }
 
   private void setMenuRegion() {
-    if (quest.getRegion().equals("Europe")) {
-      europeItem.setSelected(true);
-    } else if (quest.getRegion().equals("USA")) {
-      usaItem.setSelected(true);
+    for (AbstractButton menuItem : Collections.list(regionGroup.getElements())) {
+      RegionButtonModel model = (RegionButtonModel) menuItem.getModel();
+      if (model.getRegion() == quest.getRegion()) {
+        menuItem.setSelected(true);
+        break;
+      }
     }
   }
 
@@ -303,13 +321,14 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
   }
 
   public void itemStateChanged(ItemEvent e) {
-    JRadioButtonMenuItem source = (JRadioButtonMenuItem) e.getSource();
-
     if (e.getStateChange() == ItemEvent.SELECTED) {
-      if (source == europeItem) {
-        quest.setRegion("Europe");
-      } else if (source == usaItem) {
-        quest.setRegion("USA");
+      if (e.getSource() instanceof AbstractButton) {
+        AbstractButton source = (AbstractButton) e.getSource();
+        if (source.getModel() instanceof RegionButtonModel) {
+          RegionButtonModel model = (RegionButtonModel) source.getModel();
+          quest.setRegion(model.getRegion());
+          prefs.setRegion(model.getRegion());
+        }
       }
 
       updateTitle();
@@ -346,13 +365,10 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
                   + "Do you really want to create a new one?", "New Quest",
               JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 
-        Quest newQuest;
-
-        newQuest = new Quest(1, 1, objects.getBoard(), null);
+        Quest newQuest = new Quest(1, 1, objects.getBoard(), null, getMenuRegion());
 
         tools.none.doClick();
         quest = newQuest;
-        setMenuRegion();
 
         updateHint();
         updateTitle();
@@ -371,14 +387,11 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
                   + "Do you really want to create a new one?", "New Quest",
               JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 
-        Quest newQuest;
-
-        newQuest = new Quest(menuItem.getQuestWidth(),
-            menuItem.getQuestHeight(), objects.getBoard(), null);
+        Quest newQuest = new Quest(menuItem.getQuestWidth(),
+            menuItem.getQuestHeight(), objects.getBoard(), null, getMenuRegion());
 
         tools.none.doClick();
         quest = newQuest;
-        setMenuRegion();
 
         updateHint();
         updateTitle();
@@ -465,7 +478,7 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
       if ((file = askPath("pdf")) != null) {
         try {
           org.lightless.heroscribe.export.ExportPDF.write(
-              prefs.ghostscriptExec, file, quest, objects);
+              prefs.getGhostscriptExec(), file, quest, objects);
         } catch (Exception ex) {
           JOptionPane.showMessageDialog(this,
               "Can't save file. Please set the right ghostscript path.",
@@ -497,10 +510,10 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
         }
       }
     } else if (source == ghostscriptKey) {
-      ghostscriptChooser.setSelectedFile(prefs.ghostscriptExec);
+      ghostscriptChooser.setSelectedFile(prefs.getGhostscriptExec());
 
       if (ghostscriptChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-        prefs.ghostscriptExec = ghostscriptChooser.getSelectedFile();
+        prefs.setGhostscriptExec(ghostscriptChooser.getSelectedFile());
 
         try {
           prefs.write();
@@ -663,5 +676,20 @@ class SpecialQuestMenuItem extends JMenuItem {
 
   public int getQuestHeight() {
     return questHeight;
+  }
+}
+
+class RegionButtonModel extends JToggleButton.ToggleButtonModel {
+  private static final long serialVersionUID = 7864691023556683961L;
+
+  private final Region region;
+
+  public RegionButtonModel(Region region) {
+    super();
+    this.region = region;
+  }
+  
+  public Region getRegion() {
+    return region;
   }
 }

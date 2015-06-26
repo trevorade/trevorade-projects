@@ -57,7 +57,7 @@ public class HeroScribe {
 
       new SplashScreenImageLoader(objects);
 
-      quest = new Quest(1, 1, objects.getBoard(), null);
+      quest = new Quest(1, 1, objects.getBoard(), null, preferences.getRegion());
 
       new Gui(preferences, objects, quest);
 

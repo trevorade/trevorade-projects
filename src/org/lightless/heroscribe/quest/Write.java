@@ -47,7 +47,7 @@ public class Write {
     out.println();
 
     out.println("<quest name=\"" + xmlEscape(quest.getName()) + "\" region=\""
-        + xmlEscape(quest.getRegion()) + "\" version=\""
+        + xmlEscape(quest.getRegion().toString()) + "\" version=\""
         + xmlEscape(org.lightless.heroscribe.Constants.version) + "\" width=\""
         + quest.getWidth() + "\" height=\"" + quest.getHeight() + "\">");
 

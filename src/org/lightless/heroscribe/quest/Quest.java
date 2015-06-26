@@ -23,13 +23,15 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Vector;
 
+import org.lightless.heroscribe.Region;
 import org.lightless.heroscribe.list.LBoard;
 
 public class Quest {
   private File file;
 
   private int width, height;
-  private String name, region, speech;
+  private String name, speech;
+  private Region region;
   private Vector<String> notes;
 
   private QBoard[][] boards;
@@ -37,7 +39,7 @@ public class Quest {
 
   private boolean modified;
 
-  public Quest(int width, int height, LBoard board, File file) {
+  public Quest(int width, int height, LBoard board, File file, Region region) {
     this.width = width;
     this.height = height;
 
@@ -52,7 +54,7 @@ public class Quest {
 
     notes = new Vector<>();
 
-    region = "Europe";
+    this.region = region;
 
     name = "";
     speech = "";
@@ -150,11 +152,11 @@ public class Quest {
     return height;
   }
 
-  public String getRegion() {
+  public Region getRegion() {
     return region;
   }
 
-  public void setRegion(String newRegion) {
+  public void setRegion(Region newRegion) {
     if (!region.equals(newRegion)) {
       region = newRegion;
 

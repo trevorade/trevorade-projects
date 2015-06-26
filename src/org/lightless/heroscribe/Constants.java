@@ -22,20 +22,29 @@ import java.awt.Color;
 import java.io.File;
 
 public class Constants {
-  public static String applicationName = "HeroScribe";
+  public static final String applicationName = "HeroScribe";
 
-  public static String version = "1.0";
+  public static final String version = "1.0";
 
-  public static String applicationVersionSuffix = "pre1";
+  public static final String applicationVersionSuffix = "pre1";
 
-  public static Color europeCorridorColor = new Color(255, 255, 255, 255);
-  public static Color usaCorridorColor = new Color(246, 246, 246, 255);
+  private static final Color europeCorridorColor = new Color(255, 255, 255, 255);
+  private static final Color usaCorridorColor = new Color(246, 246, 246, 255);
+  public static Color getCorridorColor(Region region) {
+    return region == Region.USA ? usaCorridorColor : europeCorridorColor;
+  }
 
-  public static Color europeDarkColor = new Color(204, 204, 204, 255);
-  public static Color usaDarkColor = new Color(178, 178, 178, 255);
+  private static final Color europeDarkColor = new Color(204, 204, 204, 255);
+  private static final Color usaDarkColor = new Color(178, 178, 178, 255);
+  public static Color getDarkColor(Region region) {
+    return region == Region.USA ? usaDarkColor : europeDarkColor;
+  }
 
-  public static Color europeTrapColor = new Color(0, 0, 0, 0);
-  public static Color usaTrapColor = new Color(250, 125, 51, 255);
+  private static final Color europeTrapColor = new Color(0, 0, 0, 0);
+  private static final Color usaTrapColor = new Color(250, 125, 51, 255);
+  public static Color getTrapColor(Region region) {
+    return region == Region.USA ? usaTrapColor : europeTrapColor;
+  }
 
-  public static File preferencesFile = new File("Preferences.xml");
+  public static final File preferencesFile = new File("Preferences.xml");
 }

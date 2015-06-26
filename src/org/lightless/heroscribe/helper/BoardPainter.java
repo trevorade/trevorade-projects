@@ -26,6 +26,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.ImageObserver;
 
 import org.lightless.heroscribe.Constants;
+import org.lightless.heroscribe.Region;
 import org.lightless.heroscribe.gui.Gui;
 import org.lightless.heroscribe.list.LObject;
 import org.lightless.heroscribe.quest.QBoard;
@@ -85,11 +86,7 @@ public class BoardPainter implements ImageObserver {
     g2d.setColor(Color.BLACK);
     g2d.fillRect(x, y, width, height);
 
-    if (getRegion().equals("Europe"))
-      g2d.setColor(org.lightless.heroscribe.Constants.europeCorridorColor);
-    else if (getRegion().equals("USA"))
-      g2d.setColor(org.lightless.heroscribe.Constants.usaCorridorColor);
-
+    g2d.setColor(Constants.getCorridorColor(getRegion()));
     g2d.fillRect(x + 1, y + 1, width - 2, height - 2);
   }
 
@@ -127,22 +124,14 @@ public class BoardPainter implements ImageObserver {
         QBoard board = gui.getQuest().getBoard(i, j);
 
         /* Corridors */
-        if (getRegion().equals("Europe"))
-          g2d.setColor(Constants.europeCorridorColor);
-        else if (getRegion().equals("USA"))
-          g2d.setColor(Constants.usaCorridorColor);
-
+        g2d.setColor(Constants.getCorridorColor(getRegion()));
         for (int left = 1; left <= board.getWidth(); left++)
           for (int top = 1; top <= board.getHeight(); top++)
             if (gui.getObjects().board.corridors[left][top])
               drawRectangle(i, j, left, top, 1, 1, g2d);
 
         /* Dark Areas */
-        if (getRegion().equals("Europe"))
-          g2d.setColor(Constants.europeDarkColor);
-        else if (getRegion().equals("USA"))
-          g2d.setColor(Constants.usaDarkColor);
-
+        g2d.setColor(Constants.getDarkColor(getRegion()));
         for (int left = 1; left <= board.getWidth(); left++)
           for (int top = 1; top <= board.getHeight(); top++)
             if (board.isDark(left, top))
@@ -200,11 +189,7 @@ public class BoardPainter implements ImageObserver {
     }
 
     if (obj.trap) {
-      if (getRegion().equals("Europe"))
-        g2d.setColor(Constants.europeTrapColor);
-      else if (getRegion().equals("USA"))
-        g2d.setColor(Constants.usaTrapColor);
-
+      g2d.setColor(Constants.getTrapColor(getRegion()));
       drawRectangle(0, 0, piece.left, piece.top, width, height, g2d);
     }
 
@@ -281,7 +266,7 @@ public class BoardPainter implements ImageObserver {
     return gui.getObjects().getBoard().getIcon(getRegion()).image;
   }
 
-  private String getRegion() {
+  private Region getRegion() {
     return gui.getQuest().getRegion();
   }
 

@@ -23,6 +23,7 @@ import java.io.File;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.lightless.heroscribe.Region;
 import org.lightless.heroscribe.helper.OS;
 import org.lightless.heroscribe.list.List;
 import org.xml.sax.Attributes;
@@ -102,10 +103,11 @@ public class Read extends DefaultHandler {
 
       boardCount = 0;
 
-      quest = new Quest(width, height, objects.getBoard(), file);
+      Region region = Region.parse(attrs.getValue("region"));
+
+      quest = new Quest(width, height, objects.getBoard(), file, region);
 
       quest.setName(attrs.getValue("name"));
-      quest.setRegion(attrs.getValue("region"));
 
       if (!org.lightless.heroscribe.Constants.version.equals(attrs
           .getValue("version")))

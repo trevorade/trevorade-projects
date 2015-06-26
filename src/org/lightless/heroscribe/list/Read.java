@@ -23,6 +23,7 @@ import java.io.File;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.lightless.heroscribe.Region;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -130,10 +131,11 @@ public class Read extends DefaultHandler {
       icon.original = Boolean.valueOf(attrs.getValue("original"))
           .booleanValue();
 
+      Region region = Region.parse(attrs.getValue("region"));
       if (onBoard)
-        board.putIcon(icon, attrs.getValue("region"));
+        board.putIcon(icon, region);
       else
-        piece.putIcon(icon, attrs.getValue("region"));
+        piece.putIcon(icon, region);
     } else if (qName == "corridor") {
       if (onBoard) {
         int width, height;
@@ -163,16 +165,16 @@ public class Read extends DefaultHandler {
   public void endElement(String uri, String localName, String qName)
       throws SAXException {
     if (qName == "board") {
-      if (!board.region.containsKey("Europe")
-          || !board.region.containsKey("USA"))
+      if (!board.region.containsKey(Region.EUROPE)
+          || !board.region.containsKey(Region.USA))
         throw new SAXException("There should be both icons for each board.");
 
       objects.board = board;
 
       onBoard = false;
     } else if (qName == "object") {
-      if (!piece.region.containsKey("Europe")
-          || !piece.region.containsKey("USA"))
+      if (!piece.region.containsKey(Region.EUROPE)
+          || !piece.region.containsKey(Region.USA))
         throw new SAXException("There should be both icons for each object.");
 
       objects.list.put(piece.id, piece);

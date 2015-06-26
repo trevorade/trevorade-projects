@@ -32,12 +32,14 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class Preferences extends DefaultHandler {
-  public File ghostscriptExec;
+  private File ghostscriptExec;
+  private Region region;
 
   public Preferences() {
     super();
 
     ghostscriptExec = new File("");
+    region = Region.EUROPE;
 
     if (OS.isWindows()) {
       File base = new File("c:\\gs\\");
@@ -54,9 +56,8 @@ public class Preferences extends DefaultHandler {
           }
         }
       }
-    } else {
-      if (new File("/usr/bin/gs").isFile())
-        ghostscriptExec = new File("/usr/bin/gs");
+    } else if (new File("/usr/bin/gs").isFile()) {
+      ghostscriptExec = new File("/usr/bin/gs");
     }
   }
 
@@ -75,6 +76,22 @@ public class Preferences extends DefaultHandler {
     }
   }
 
+  public File getGhostscriptExec() {
+    return ghostscriptExec;
+  }
+
+  public void setGhostscriptExec(File ghostscriptExec) {
+    this.ghostscriptExec = ghostscriptExec;
+  }
+
+  public Region getRegion() {
+    return region;
+  }
+
+  public void setRegion(Region region) {
+    this.region = region;
+  }
+
   /* Read XML */
 
   public void startElement(String uri, String localName, String qName,
@@ -85,6 +102,9 @@ public class Preferences extends DefaultHandler {
       if (file.isFile()) {
         ghostscriptExec = file;
       }
+    }
+    if (qName == "region") {
+      region = Region.parse(attrs.getValue("value"));
     }
   }
 
@@ -100,6 +120,8 @@ public class Preferences extends DefaultHandler {
     out.println("<ghostscript path=\""
         + ghostscriptExec.getAbsoluteFile().toString()
             .replaceAll("\"", "&quot;") + "\"/>");
+
+    out.printf("<region value=\"%s\"/>\n", region.toString());
 
     out.println("</preferences>");
 

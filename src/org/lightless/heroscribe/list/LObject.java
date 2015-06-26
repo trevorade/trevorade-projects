@@ -20,8 +20,10 @@ package org.lightless.heroscribe.list;
 
 import java.util.TreeMap;
 
+import org.lightless.heroscribe.Region;
+
 public class LObject implements Comparable<LObject> {
-  public TreeMap<String, Icon> region;
+  public TreeMap<Region, Icon> region;
 
   public String id, name, kind, note;
 
@@ -35,11 +37,11 @@ public class LObject implements Comparable<LObject> {
     region = new TreeMap<>();
   }
 
-  public void putIcon(Icon icon, String region) {
+  public void putIcon(Icon icon, Region region) {
     this.region.put(region, icon);
   }
 
-  public Icon getIcon(String region) {
+  public Icon getIcon(Region region) {
     return this.region.get(region);
   }
 

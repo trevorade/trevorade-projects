@@ -21,6 +21,7 @@ package org.lightless.heroscribe.list;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.lightless.heroscribe.Region;
 import org.lightless.heroscribe.helper.OS;
 
 public class List {
@@ -68,32 +69,32 @@ public class List {
     return null;
   }
 
-  public String getVectorPath(String id, String region) {
+  public String getVectorPath(String id, Region region) {
     return OS.getAbsolutePath(vectorPrefix + getObject(id).getIcon(region).path
         + vectorSuffix);
   }
 
-  public String getRasterPath(String id, String region) {
+  public String getRasterPath(String id, Region region) {
     return OS.getAbsolutePath(rasterPrefix + getObject(id).getIcon(region).path
         + rasterSuffix);
   }
 
-  public String getSamplePath(String id, String region) {
+  public String getSamplePath(String id, Region region) {
     return OS.getAbsolutePath(samplePrefix + getObject(id).getIcon(region).path
         + sampleSuffix);
   }
 
-  public String getVectorPath(String region) {
+  public String getVectorPath(Region region) {
     return OS.getAbsolutePath(vectorPrefix + getBoard().getIcon(region).path
         + vectorSuffix);
   }
 
-  public String getRasterPath(String region) {
+  public String getRasterPath(Region region) {
     return OS.getAbsolutePath(rasterPrefix + getBoard().getIcon(region).path
         + rasterSuffix);
   }
 
-  public String getSamplePath(String region) {
+  public String getSamplePath(Region region) {
     return OS.getAbsolutePath(samplePrefix + getBoard().getIcon(region).path
         + sampleSuffix);
   }

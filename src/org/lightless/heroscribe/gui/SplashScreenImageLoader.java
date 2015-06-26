@@ -25,6 +25,7 @@ import java.awt.Toolkit;
 
 import javax.swing.JWindow;
 
+import org.lightless.heroscribe.Region;
 import org.lightless.heroscribe.list.LObject;
 import org.lightless.heroscribe.list.List;
 
@@ -77,25 +78,21 @@ public class SplashScreenImageLoader extends JWindow {
     start = System.currentTimeMillis();
 
     /* Board */
-    img = tk.createImage(objects.getRasterPath("Europe"));
-    objects.getBoard().getIcon("Europe").image = img;
-    mt.addImage(img, 10);
-
-    img = tk.createImage(objects.getRasterPath("USA"));
-    objects.getBoard().getIcon("USA").image = img;
-    mt.addImage(img, 10);
+    for (Region region : Region.values()) {
+      img = tk.createImage(objects.getRasterPath(region));
+      objects.getBoard().getIcon(region).image = img;
+      mt.addImage(img, 10);
+    }
 
     for (LObject object : objects.objectsIterable()) {
       String id = object.id;
 
       /* Icons */
-      img = tk.createImage(objects.getRasterPath(id, "Europe"));
-      objects.getObject(id).getIcon("Europe").image = img;
-      mt.addImage(img, 20);
-
-      img = tk.createImage(objects.getRasterPath(id, "USA"));
-      objects.getObject(id).getIcon("USA").image = img;
-      mt.addImage(img, 20);
+      for (Region region : Region.values()) {
+        img = tk.createImage(objects.getRasterPath(id, region));
+        objects.getObject(id).getIcon(region).image = img;
+        mt.addImage(img, 20);
+      }
     }
 
     mt.waitForAll();
