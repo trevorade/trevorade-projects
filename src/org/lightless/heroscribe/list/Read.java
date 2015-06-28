@@ -110,7 +110,7 @@ public class Read extends DefaultHandler {
       piece.id = attrs.getValue("id");
       piece.name = attrs.getValue("name");
 
-      piece.kind = attrs.getValue("kind");
+      piece.kindId = attrs.getValue("kind");
 
       piece.door = Boolean.valueOf(attrs.getValue("door")).booleanValue();
       piece.trap = Boolean.valueOf(attrs.getValue("trap")).booleanValue();

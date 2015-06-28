@@ -25,7 +25,7 @@ import org.lightless.heroscribe.Region;
 public class LObject implements Comparable<LObject> {
   public TreeMap<Region, Icon> region;
 
-  public String id, name, kind, note;
+  public String id, name, kindId, note;
 
   public int height, width;
 

@@ -45,6 +45,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileFilter;
@@ -105,9 +106,6 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
         .put("xml", new ActualFileFilter("xml", "HeroScribe Quests (*.xml)"));
 
     boardPainter = new BoardPainter(this);
-
-    tools = new ToolsPanel(this);
-    board = new Board(this);
 
     newSpecialKeys = new Vector<>();
     newSpecialKeys.add(new SpecialQuestMenuItem(1, 2));
@@ -264,10 +262,12 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
 
     content.setLayout(new BorderLayout());
 
+    tools = new ToolsPanel(this);
+    board = new Board(this);
+
     tools.setPreferredSize(tools.getMinimumSize());
 
-    content.add(new JScrollPane(board));
-    content.add(tools, BorderLayout.WEST);
+    content.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, tools, new JScrollPane(board)));
 
     bottom.setLayout(new BorderLayout());
 
@@ -293,7 +293,7 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
     setSize(1135, 785);
   }
 
-  private Region getMenuRegion() {
+  public Region getMenuRegion() {
     for (AbstractButton menuItem : Collections.list(regionGroup.getElements())) {
       if (menuItem.isSelected()) {
         RegionButtonModel model = (RegionButtonModel) menuItem.getModel();

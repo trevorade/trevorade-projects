@@ -43,7 +43,7 @@ public class Board extends JPanel implements MouseInputListener {
 
   private boolean isPaintingDark, isDark, hasAdded;
 
-  public Board(Gui gui) throws Exception {
+  public Board(Gui gui) {
     super();
 
     this.gui = gui;
