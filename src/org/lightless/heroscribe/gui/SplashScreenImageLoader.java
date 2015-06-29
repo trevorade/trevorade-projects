@@ -80,7 +80,7 @@ public class SplashScreenImageLoader extends JWindow {
     /* Board */
     for (Region region : Region.values()) {
       img = tk.createImage(objects.getRasterPath(region));
-      objects.getBoard().getIcon(region).image = img;
+      objects.getBoard().getIcon(region).setImage(img);
       mt.addImage(img, 10);
     }
 
@@ -90,7 +90,7 @@ public class SplashScreenImageLoader extends JWindow {
       /* Icons */
       for (Region region : Region.values()) {
         img = tk.createImage(objects.getRasterPath(id, region));
-        objects.getObject(id).getIcon(region).image = img;
+        objects.getObject(id).getIcon(region).setImage(img);
         mt.addImage(img, 20);
       }
     }

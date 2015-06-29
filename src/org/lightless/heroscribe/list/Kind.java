@@ -19,9 +19,9 @@
 package org.lightless.heroscribe.list;
 
 public class Kind implements Comparable<Kind> {
-  public String id, name;
+  public final String id, name;
 
-  private int order;
+  private final int order;
   private static int count = 0;
 
   public Kind(String id, String name) {

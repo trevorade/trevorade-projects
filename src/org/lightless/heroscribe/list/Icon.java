@@ -19,11 +19,67 @@
 package org.lightless.heroscribe.list;
 
 import java.awt.Image;
+import java.security.InvalidParameterException;
 
 public class Icon {
-  public String path;
-  public float xoffset, yoffset;
-  public boolean original;
+  public final String path;
+  public final float xoffset, yoffset;
+  public final boolean original;
+  private Image image;  // Loads later. Will allow to be set once.
 
-  public Image image;
+  private Icon(String path, float xoffset, float yoffset, boolean original) {
+    this.path = path;
+    this.xoffset = xoffset;
+    this.yoffset = yoffset;
+    this.original = original;
+    this.image = null;
+  }
+  
+  public void setImage(Image image) {
+    if (this.image != null && this.image != image) {
+      throw new InvalidParameterException(
+          "The icon's image may only be set once.");
+    }
+    this.image = image;
+  }
+  
+  public Image getImage() {
+    return image;
+  }
+
+  public static Builder newBuilder() {
+    return new Builder();
+  }
+  
+  public static class Builder {
+    private String path;
+    private float xoffset, yoffset;
+    private boolean original;
+
+    private Builder() {}
+
+    public Builder setPath(String path) {
+      this.path = path;
+      return this;
+    }
+
+    public Builder setXoffset(float xoffset) {
+      this.xoffset = xoffset;
+      return this;
+    }
+
+    public Builder setYoffset(float yoffset) {
+      this.yoffset = yoffset;
+      return this;
+    }
+
+    public Builder setOriginal(boolean original) {
+      this.original = original;
+      return this;
+    }
+
+    public Icon build() {
+      return new Icon(path, xoffset, yoffset, original);
+    }
+  }
 }

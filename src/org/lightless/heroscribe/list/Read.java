@@ -31,17 +31,17 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class Read extends DefaultHandler {
-  private List objects;
+  private List.Builder listBuilder;
 
   private boolean onBoard;
-  private LObject piece;
-  private LBoard board;
+  private LObject.Builder pieceBuilder;
+  private LBoard.Builder boardBuilder;
   private StringBuffer content;
 
   public Read(File file) throws Exception {
     super();
 
-    objects = new List();
+    listBuilder = List.newBuilder();
 
     SAXParserFactory factory = SAXParserFactory.newInstance();
     factory.setValidating(true);
@@ -51,7 +51,7 @@ public class Read extends DefaultHandler {
   }
 
   public List getObjects() {
-    return objects;
+    return listBuilder.build();
   }
 
   /* --- */
@@ -77,65 +77,51 @@ public class Read extends DefaultHandler {
     content = new StringBuffer();
 
     if (qName == "objectList") {
-      objects.version = attrs.getValue("version");
-
-      if (!objects.version.equals(org.lightless.heroscribe.Constants.version))
+      String version = attrs.getValue("version");
+      if (!version.equals(org.lightless.heroscribe.Constants.version))
         throw new SAXException(
             "HeroScribe's and Objects.xml's version numbers don't match.");
 
-      objects.vectorPrefix = attrs.getValue("vectorPrefix");
-      objects.vectorSuffix = attrs.getValue("vectorSuffix");
-
-      objects.rasterPrefix = attrs.getValue("rasterPrefix");
-      objects.rasterSuffix = attrs.getValue("rasterSuffix");
-
-      objects.samplePrefix = attrs.getValue("samplePrefix");
-      objects.sampleSuffix = attrs.getValue("sampleSuffix");
+      listBuilder
+          .setVersion(version)
+          .setVectorPrefix(attrs.getValue("vectorPrefix"))
+          .setVectorSuffix(attrs.getValue("vectorSuffix"))
+          .setRasterPrefix(attrs.getValue("rasterPrefix"))
+          .setRasterSuffix(attrs.getValue("rasterSuffix"))
+          .setSamplePrefix(attrs.getValue("samplePrefix"))
+          .setSampleSuffix(attrs.getValue("sampleSuffix"));
     } else if (qName == "kind") {
-      objects.kinds.add(new Kind(attrs.getValue("id"), attrs.getValue("name")));
+      listBuilder.addKind(new Kind(attrs.getValue("id"), attrs.getValue("name")));
     } else if (qName == "board") {
-      board = new LBoard(Integer.parseInt(attrs.getValue("width")),
-          Integer.parseInt(attrs.getValue("height")));
-
-      board.borderDoorsOffset = Float.parseFloat(attrs
-          .getValue("borderDoorsOffset"));
-
-      board.adjacentBoardsOffset = Float.parseFloat(attrs
-          .getValue("adjacentBoardsOffset"));
+      boardBuilder = LBoard.newBuilder(Integer.parseInt(attrs.getValue("width")),
+          Integer.parseInt(attrs.getValue("height")))
+          .setBorderDoorsOffset(Float.parseFloat(attrs.getValue("borderDoorsOffset")))
+          .setAdjacentBoardsOffset(Float.parseFloat(attrs.getValue("adjacentBoardsOffset")));
 
       onBoard = true;
     } else if (qName == "object") {
-      piece = new LObject();
-
-      piece.id = attrs.getValue("id");
-      piece.name = attrs.getValue("name");
-
-      piece.kindId = attrs.getValue("kind");
-
-      piece.door = Boolean.valueOf(attrs.getValue("door")).booleanValue();
-      piece.trap = Boolean.valueOf(attrs.getValue("trap")).booleanValue();
-
-      piece.width = Integer.parseInt(attrs.getValue("width"));
-      piece.height = Integer.parseInt(attrs.getValue("height"));
-
-      piece.zorder = Float.parseFloat(attrs.getValue("zorder"));
-
-      piece.note = null;
+      pieceBuilder = LObject.newBuilder()
+          .setId(attrs.getValue("id"))
+          .setName(attrs.getValue("name"))
+          .setKindId(attrs.getValue("kind"))
+          .setDoor(Boolean.valueOf(attrs.getValue("door")).booleanValue())
+          .setTrap(Boolean.valueOf(attrs.getValue("trap")).booleanValue())
+          .setWidth(Integer.parseInt(attrs.getValue("width")))
+          .setHeight(Integer.parseInt(attrs.getValue("height")))
+          .setZOrder(Float.parseFloat(attrs.getValue("zorder")))
+          .setNote(null);
     } else if (qName == "icon") {
-      Icon icon = new Icon();
-
-      icon.path = attrs.getValue("path");
-      icon.xoffset = Float.parseFloat(attrs.getValue("xoffset"));
-      icon.yoffset = Float.parseFloat(attrs.getValue("yoffset"));
-
-      icon.original = Boolean.valueOf(attrs.getValue("original"))
-          .booleanValue();
+      Icon.Builder iconBuilder = Icon.newBuilder()
+          .setPath(attrs.getValue("path"))
+          .setXoffset(Float.parseFloat(attrs.getValue("xoffset")))
+          .setYoffset(Float.parseFloat(attrs.getValue("yoffset")))
+          .setOriginal(Boolean.valueOf(attrs.getValue("original")).booleanValue());
 
       Region region = Region.parse(attrs.getValue("region"));
       if (onBoard)
-        board.putIcon(icon, region);
+        boardBuilder.putIcon(iconBuilder.build(), region);
       else
-        piece.putIcon(icon, region);
+        pieceBuilder.putIcon(iconBuilder.build(), region);
     } else if (qName == "corridor") {
       if (onBoard) {
         int width, height;
@@ -146,14 +132,13 @@ public class Read extends DefaultHandler {
         left = Integer.parseInt(attrs.getValue("left"));
         top = Integer.parseInt(attrs.getValue("top"));
 
-        if (left + width - 1 > board.width || left < 1
-            || top + height - 1 > board.height || top < 1)
+        if (left + width - 1 > boardBuilder.getWidth() || left < 1
+            || top + height - 1 > boardBuilder.getHeight() || top < 1)
           throw new SAXException("Corridors: out of border");
 
         for (int i = 0; i < width; i++)
           for (int j = 0; j < height; j++)
-            board.corridors[i + left][j + top] = true;
-
+            boardBuilder.setCorridor(i + left, j + top);
       }
     }
   }
@@ -165,26 +150,25 @@ public class Read extends DefaultHandler {
   public void endElement(String uri, String localName, String qName)
       throws SAXException {
     if (qName == "board") {
-      if (!board.region.containsKey(Region.EUROPE)
-          || !board.region.containsKey(Region.USA))
+      if (!boardBuilder.hasIconsForAllRegions())
         throw new SAXException("There should be both icons for each board.");
 
-      objects.board = board;
+      listBuilder.setBoard(boardBuilder.build());
 
       onBoard = false;
     } else if (qName == "object") {
-      if (!piece.region.containsKey(Region.EUROPE)
-          || !piece.region.containsKey(Region.USA))
+      if (!pieceBuilder.hasIconsForAllRegions())
         throw new SAXException("There should be both icons for each object.");
 
-      objects.list.put(piece.id, piece);
+      LObject piece = pieceBuilder.build();
+      listBuilder.addObject(piece);
     } else if (qName == "note") {
-      piece.note = new String(content);
+      pieceBuilder.setNote(new String(content));
     }
   }
 
   public void endDocument() {
     content = null;
-    piece = null;
+    pieceBuilder = null;
   }
 }

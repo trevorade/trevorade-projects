@@ -18,6 +18,9 @@
 
 package org.lightless.heroscribe.list;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -25,19 +28,30 @@ import org.lightless.heroscribe.Region;
 import org.lightless.heroscribe.helper.OS;
 
 public class List {
-  public LBoard board;
+  public final LBoard board;
 
-  public TreeMap<String, LObject> list;
-  public TreeSet<Kind> kinds;
+  public final Map<String, LObject> list;
+  public final Set<Kind> kinds;
 
-  public String version;
-  public String vectorPrefix, vectorSuffix;
-  public String rasterPrefix, rasterSuffix;
-  public String samplePrefix, sampleSuffix;
+  public final String version;
+  public final String vectorPrefix, vectorSuffix;
+  public final String rasterPrefix, rasterSuffix;
+  public final String samplePrefix, sampleSuffix;
 
-  public List() {
-    list = new TreeMap<>();
-    kinds = new TreeSet<>();
+  private List(LBoard board, Map<String, LObject> list, Set<Kind> kinds,
+      String version, String vectorPrefix, String vectorSuffix,
+      String rasterPrefix, String rasterSuffix, String samplePrefix,
+      String sampleSuffix) {
+    this.board = board;
+    this.list = Collections.unmodifiableMap(list);
+    this.kinds = Collections.unmodifiableSet(kinds);
+    this.version = version;
+    this.vectorPrefix = vectorPrefix;
+    this.vectorSuffix = vectorSuffix;
+    this.rasterPrefix = rasterPrefix;
+    this.rasterSuffix = rasterSuffix;
+    this.samplePrefix = samplePrefix;
+    this.sampleSuffix = sampleSuffix;
   }
 
   public Iterable<LObject> objectsIterable() {
@@ -53,7 +67,7 @@ public class List {
   }
 
   public LObject getObject(String id) {
-    return (LObject) list.get(id);
+    return list.get(id);
   }
 
   public LBoard getBoard() {
@@ -99,4 +113,79 @@ public class List {
         + sampleSuffix);
   }
 
+  public static Builder newBuilder() {
+    return new Builder();
+  }
+
+  public static class Builder {
+    private LBoard board;
+
+    private Map<String, LObject> list;
+    private Set<Kind> kinds;
+
+    private String version;
+    private String vectorPrefix, vectorSuffix;
+    private String rasterPrefix, rasterSuffix;
+    private String samplePrefix, sampleSuffix;
+
+    private Builder() {
+      list = new TreeMap<>();
+      kinds = new TreeSet<>();
+    }
+
+    public Builder setBoard(LBoard board) {
+      this.board = board;
+      return this;
+    }
+    
+    public Builder addObject(LObject object) {
+      list.put(object.id, object);
+      return this;
+    }
+
+    public Builder addKind(Kind kind) {
+      kinds.add(kind);
+      return this;
+    }
+
+    public Builder setVersion(String version) {
+      this.version = version;
+      return this;
+    }
+
+    public Builder setVectorPrefix(String vectorPrefix) {
+      this.vectorPrefix = vectorPrefix;
+      return this;
+    }
+
+    public Builder setVectorSuffix(String vectorSuffix) {
+      this.vectorSuffix = vectorSuffix;
+      return this;
+    }
+
+    public Builder setRasterPrefix(String rasterPrefix) {
+      this.rasterPrefix = rasterPrefix;
+      return this;
+    }
+
+    public Builder setRasterSuffix(String rasterSuffix) {
+      this.rasterSuffix = rasterSuffix;
+      return this;
+    }
+
+    public Builder setSamplePrefix(String samplePrefix) {
+      this.samplePrefix = samplePrefix;
+      return this;
+    }
+
+    public Builder setSampleSuffix(String sampleSuffix) {
+      this.sampleSuffix = sampleSuffix;
+      return this;
+    }
+
+    public List build() {
+      return new List(board, list, kinds, version, vectorPrefix, vectorSuffix,
+          rasterPrefix, rasterSuffix, samplePrefix, sampleSuffix);
+    }
+  }
 }

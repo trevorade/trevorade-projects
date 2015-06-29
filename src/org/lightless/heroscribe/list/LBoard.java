@@ -18,34 +18,95 @@
 
 package org.lightless.heroscribe.list;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.TreeMap;
 
 import org.lightless.heroscribe.Region;
 
 public class LBoard {
-  public TreeMap<Region, Icon> region;
+  public final Map<Region, Icon> iconsByRegion;
+  private final boolean[][] corridors;  // Arrays are always mutable so we can't give public access...
+  public final int width, height;
+  public final float borderDoorsOffset, adjacentBoardsOffset;
 
-  public boolean[][] corridors;
-
-  public int width, height;
-
-  public float borderDoorsOffset, adjacentBoardsOffset;
-
-  public LBoard(int width, int height) {
-    region = new TreeMap<>();
-
+  private LBoard(Map<Region, Icon> iconsByRegion, boolean[][] corridors,
+      int width, int height, float borderDoorsOffset, float adjacentBoardsOffset) {
+    this.iconsByRegion = Collections.unmodifiableMap(iconsByRegion);
+    this.corridors = corridors;
     this.width = width;
     this.height = height;
-
-    /* Summing 2 for the borders: not really necessary, but... */
-    corridors = new boolean[width + 2][height + 2];
-  }
-
-  public void putIcon(Icon icon, Region region) {
-    this.region.put(region, icon);
+    this.borderDoorsOffset = borderDoorsOffset;
+    this.adjacentBoardsOffset = adjacentBoardsOffset;
   }
 
   public Icon getIcon(Region region) {
-    return this.region.get(region);
+    return iconsByRegion.get(region);
+  }
+
+  public boolean isCorridor(int col, int row) {
+    return corridors[col][row];
+  }
+
+  public static Builder newBuilder(int width, int height) {
+    return new Builder(width, height);
+  }
+
+  public static class Builder {
+    private TreeMap<Region, Icon> iconsByRegion;
+    private boolean[][] corridors;
+    private final int width, height;
+    private float borderDoorsOffset, adjacentBoardsOffset;
+
+    private Builder(int width, int height) {
+      iconsByRegion = new TreeMap<>();
+
+      this.width = width;
+      this.height = height;
+
+      /* Summing 2 for the borders: not really necessary, but... */
+      corridors = new boolean[width + 2][height + 2];
+    }
+
+    public int getWidth() {
+      return width;
+    }
+
+    public int getHeight() {
+      return height;
+    }
+
+    public boolean hasIconsForAllRegions() {
+      for (Region region : Region.values()) {
+        if (!iconsByRegion.containsKey(region)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    public Builder putIcon(Icon icon, Region region) {
+      this.iconsByRegion.put(region, icon);
+      return this;
+    }
+
+    public Builder setCorridor(int col, int row) {
+      corridors[col][row] = true;
+      return this;
+    }
+
+    public Builder setBorderDoorsOffset(float borderDoorsOffset) {
+      this.borderDoorsOffset = borderDoorsOffset;
+      return this;
+    }
+
+    public Builder setAdjacentBoardsOffset(float adjacentBoardsOffset) {
+      this.adjacentBoardsOffset = adjacentBoardsOffset;
+      return this;
+    }
+    
+    public LBoard build() {
+      return new LBoard(iconsByRegion, corridors, getWidth(), getHeight(), borderDoorsOffset, adjacentBoardsOffset);
+    }
   }
 }

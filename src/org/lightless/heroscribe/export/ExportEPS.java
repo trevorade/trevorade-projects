@@ -28,6 +28,7 @@ import java.io.PrintWriter;
 import java.util.TreeSet;
 import java.util.zip.GZIPInputStream;
 
+import org.lightless.heroscribe.list.LBoard;
 import org.lightless.heroscribe.list.List;
 import org.lightless.heroscribe.quest.QBoard;
 import org.lightless.heroscribe.quest.QObject;
@@ -133,13 +134,14 @@ public class ExportEPS {
     for (int column = 0; column < quest.getWidth(); column++)
       for (int row = 0; row < quest.getHeight(); row++) {
         QBoard board = quest.getBoard(column, row);
+        LBoard lBoard = objects.board;
 
         out.println(column + " " + (quest.getHeight() - row - 1)
             + " StartBoard");
 
         for (int i = 1; i <= board.getWidth(); i++)
           for (int j = 1; j <= board.getHeight(); j++)
-            if (objects.board.corridors[i][j])
+            if (lBoard.isCorridor(i, j))
               out.println(i + " " + (board.getHeight() - j + 1)
                   + " 1 1 Corridor");
 

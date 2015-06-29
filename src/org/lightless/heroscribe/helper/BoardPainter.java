@@ -28,6 +28,7 @@ import java.awt.image.ImageObserver;
 import org.lightless.heroscribe.Constants;
 import org.lightless.heroscribe.Region;
 import org.lightless.heroscribe.gui.Gui;
+import org.lightless.heroscribe.list.LBoard;
 import org.lightless.heroscribe.list.LObject;
 import org.lightless.heroscribe.quest.QBoard;
 import org.lightless.heroscribe.quest.QObject;
@@ -122,12 +123,13 @@ public class BoardPainter implements ImageObserver {
     for (int i = 0; i < gui.getQuest().getWidth(); i++)
       for (int j = 0; j < gui.getQuest().getHeight(); j++) {
         QBoard board = gui.getQuest().getBoard(i, j);
+        LBoard lBoard = gui.getObjects().board;
 
         /* Corridors */
         g2d.setColor(Constants.getCorridorColor(getRegion()));
         for (int left = 1; left <= board.getWidth(); left++)
           for (int top = 1; top <= board.getHeight(); top++)
-            if (gui.getObjects().board.corridors[left][top])
+            if (lBoard.isCorridor(left, top))
               drawRectangle(i, j, left, top, 1, 1, g2d);
 
         /* Dark Areas */
@@ -259,11 +261,11 @@ public class BoardPainter implements ImageObserver {
   }
 
   private Image getObjectIcon(String id) {
-    return gui.getObjects().getObject(id).getIcon(getRegion()).image;
+    return gui.getObjects().getObject(id).getIcon(getRegion()).getImage();
   }
 
   private Image getBoardIcon() {
-    return gui.getObjects().getBoard().getIcon(getRegion()).image;
+    return gui.getObjects().getBoard().getIcon(getRegion()).getImage();
   }
 
   private Region getRegion() {

@@ -79,7 +79,7 @@ class ObjectSelector extends JPanel implements ItemListener,
     add(objectsPanel);
 
     for (Kind kind : gui.getObjects().kindsIterable()) {
-      JList<LObject> list = new JList<>(new DefaultListModel<>());
+      JList<LObject> list = new JList<>(new DefaultListModel<LObject>());
       list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
       list.addListSelectionListener(this);
       objectsPanel.add(new JScrollPane(list), kind.id);
@@ -108,9 +108,9 @@ class ObjectSelector extends JPanel implements ItemListener,
     return selectedObject;
   }
 
-  public int getSelectedObjectRotation() {
-    return objectRotation;
-  }
+//  public int getSelectedObjectRotation() {
+//    return objectRotation;
+//  }
 
   private void setSelectedObject(LObject obj) {
     if (obj != null) {
@@ -162,7 +162,7 @@ class ObjectSelector extends JPanel implements ItemListener,
       int maxHeight = 30;
 
       for (LObject obj : listObjects) {
-        Image objImage = obj.getIcon(gui.getMenuRegion()).image;
+        Image objImage = obj.getIcon(gui.getMenuRegion()).getImage();
         maxIconWidth = Math.max(maxIconWidth, objImage.getWidth(null));
         maxHeight = Math.max(maxHeight, objImage.getHeight(null));
         maxLabelWidth = Math.max(maxLabelWidth, metrics.stringWidth(obj.name));
@@ -211,7 +211,7 @@ class ObjectSelector extends JPanel implements ItemListener,
         g2d.setColor(background);
         g2d.fillRect(0, 0, width, height);
 
-        Image image = gui.getObjects().getObject(obj.id).getIcon(gui.getMenuRegion()).image;
+        Image image = gui.getObjects().getObject(obj.id).getIcon(gui.getMenuRegion()).getImage();
         int imageWidth = image.getWidth(null);
         int imageHeight = image.getHeight(null);
         g2d.drawImage(image, x + (maxIconWidth - imageWidth) / 2, (height - imageHeight) / 2, null);

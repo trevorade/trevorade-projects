@@ -64,7 +64,7 @@ class SquareDisplayer extends JPanel implements ListSelectionListener,
 
     selected = new TreeSet<>();
 
-    list = new JList<>(new DefaultListModel<>());
+    list = new JList<>(new DefaultListModel<QObject>());
     list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     list.addListSelectionListener(this);
 
