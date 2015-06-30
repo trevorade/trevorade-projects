@@ -22,6 +22,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -31,15 +33,20 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
+
 public class Preferences extends DefaultHandler {
   private File ghostscriptExec;
   private Region region;
+  private HashMap<String, Integer> numberOwnedByLObjectId;
 
   public Preferences() {
     super();
 
     ghostscriptExec = new File("");
     region = Region.EUROPE;
+    numberOwnedByLObjectId = new HashMap<>();
 
     if (OS.isWindows()) {
       File base = new File("c:\\gs\\");
@@ -92,6 +99,18 @@ public class Preferences extends DefaultHandler {
     this.region = region;
   }
 
+  public @Nullable Integer getNumOwned(@NotNull String lObjectId) {
+    return numberOwnedByLObjectId.get(lObjectId);
+  }
+
+  public void setNumOwned(@NotNull String lObjectId, @Nullable Integer numOwned) {
+    if (numOwned == null) {
+      numberOwnedByLObjectId.remove(lObjectId);
+    } else {
+      numberOwnedByLObjectId.put(lObjectId, numOwned);
+    }
+  }
+
   /* Read XML */
 
   @Override
@@ -107,6 +126,11 @@ public class Preferences extends DefaultHandler {
     if (qName == "region") {
       region = Region.parse(attrs.getValue("value"));
     }
+    if (qName == "owned") {
+      String id = attrs.getValue("id");
+      int numOwned = Integer.parseInt(attrs.getValue("value"));
+      numberOwnedByLObjectId.put(id, numOwned);
+    }
   }
 
   /* Write XML */
@@ -117,11 +141,15 @@ public class Preferences extends DefaultHandler {
       out.println("<?xml version=\"1.0\"?>");
       out.println("<preferences>");
 
-      out.println("<ghostscript path=\""
-          + ghostscriptExec.getAbsoluteFile().toString()
-              .replaceAll("\"", "&quot;") + "\"/>");
+      out.printf("<ghostscript path=\"%s\"/>\n\n", ghostscriptExec
+          .getAbsoluteFile().toString().replaceAll("\"", "&quot;"));
 
-      out.printf("<region value=\"%s\"/>\n", region.toString());
+      out.printf("<region value=\"%s\"/>\n\n", region.toString());
+
+      for (String lObjectId : numberOwnedByLObjectId.keySet()) {
+        out.printf("<owned id=\"%s\" value=\"%d\"/>\n", lObjectId,
+            numberOwnedByLObjectId.get(lObjectId));
+      }
 
       out.println("</preferences>");
     }

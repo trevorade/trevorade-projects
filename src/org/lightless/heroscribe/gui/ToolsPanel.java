@@ -1,16 +1,16 @@
 /*
   HeroScribe
   Copyright (C) 2002-2004 Flavio Chierichetti and Valerio Chierichetti
-   
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License version 2 (not
   later versions) as published by the Free Software Foundation.
- 
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -31,6 +31,7 @@ import javax.swing.JToggleButton;
 import javax.swing.border.EtchedBorder;
 
 import org.lightless.heroscribe.Command;
+import org.lightless.heroscribe.Preferences;
 
 class ToolsPanel extends JPanel implements ItemListener {
   private static final long serialVersionUID = -3651474373588612642L;
@@ -47,7 +48,7 @@ class ToolsPanel extends JPanel implements ItemListener {
 
   private Command selected;
 
-  public ToolsPanel(Gui gui) {
+  public ToolsPanel(Gui gui, Preferences prefs) {
     this.gui = gui;
 
     setLayout(new BorderLayout());
@@ -77,7 +78,7 @@ class ToolsPanel extends JPanel implements ItemListener {
     modePanel.add(select);
     modePanel.add(dark);
 
-    selectorPanel = new ObjectSelector(gui);
+    selectorPanel = new ObjectSelector(gui, prefs);
     selectorPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
     displayerPanel = new SquareDisplayer(gui);

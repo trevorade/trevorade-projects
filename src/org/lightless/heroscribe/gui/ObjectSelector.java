@@ -18,6 +18,7 @@
 
 package org.lightless.heroscribe.gui;
 
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -31,18 +32,28 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Collections;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 
+import org.lightless.heroscribe.Preferences;
 import org.lightless.heroscribe.list.Kind;
 import org.lightless.heroscribe.list.LObject;
 
@@ -50,24 +61,37 @@ class ObjectSelector extends JPanel implements ItemListener,
     ListSelectionListener {
   private static final long serialVersionUID = 6632957726118414665L;
 
-  private Gui gui;
+  private final Gui gui;
+  private final Preferences prefs;
 
   private JComboBox<Kind> kindsComboBox;
   private JPanel objectsPanel;
   private CardLayout cardLayout;
+  private JPanel ownedPanel;
+  private JTextField numberOwnedField;
 
   private TreeMap<String, JList<LObject>> kindLists;
 
   private String selectedObject;
 
-  public ObjectSelector(Gui gui) {
+  public ObjectSelector(Gui gui, Preferences prefs) {
     super();
 
     this.gui = gui;
+    this.prefs = prefs;
 
     kindsComboBox = new JComboBox<>();
     objectsPanel = new JPanel();
     cardLayout = new CardLayout();
+    ownedPanel = new JPanel();
+
+    ownedPanel.setLayout(new BorderLayout());
+    ownedPanel.add(new JLabel("Number Owned:"), BorderLayout.WEST);
+    numberOwnedField = new JTextField();
+    ((AbstractDocument)numberOwnedField.getDocument()).setDocumentFilter(new NumberFilter());
+    numberOwnedField.getDocument().addDocumentListener(new NumberOwnedListener());
+    numberOwnedField.setEnabled(false);
+    ownedPanel.add(numberOwnedField);
 
     kindLists = new TreeMap<>();
 
@@ -79,7 +103,7 @@ class ObjectSelector extends JPanel implements ItemListener,
     // Add a checkbox to limit display to owned items (non-zero or greater than 1).
     add(kindsComboBox);
     add(objectsPanel);
-    // Add a panel with an input to modify how many you own as well as a larger preview (if applicable for the selected kind)
+    add(ownedPanel);
 
     for (Kind kind : gui.getObjects().kindsIterable()) {
       JList<LObject> list = new JList<>(new DefaultListModel<LObject>());
@@ -114,8 +138,14 @@ class ObjectSelector extends JPanel implements ItemListener,
   private void setSelectedObject(LObject obj) {
     if (obj != null) {
       selectedObject = obj.id;
+      numberOwnedField.setEnabled(true);
+
+      Integer numOwned = prefs.getNumOwned(obj.id);
+      numberOwnedField.setText(numOwned == null ? "" : numOwned.toString());
     } else {
       selectedObject = null;
+      numberOwnedField.setEnabled(false);
+      numberOwnedField.setText("");
     }
 
     gui.board.resetRotation();
@@ -147,7 +177,61 @@ class ObjectSelector extends JPanel implements ItemListener,
     gui.updateHint();
   }
 
-  class ObjectListCellRenderer implements ListCellRenderer<LObject> {
+  private void numOwnedTextChanged(String newValue) {
+    if (newValue.trim().isEmpty()) {
+      prefs.setNumOwned(selectedObject, null);
+    } else {
+      prefs.setNumOwned(selectedObject, Integer.parseInt(newValue));
+    }
+    objectsPanel.repaint();
+  }
+
+  private final class NumberFilter extends DocumentFilter {
+    final Pattern numbers = Pattern.compile("[0-9]*");
+
+    @Override
+    public void insertString(FilterBypass fb, int offset, String string,
+        AttributeSet attr) throws BadLocationException {
+      if (numbers.matcher(string).matches()) {
+        super.insertString(fb, offset, string, attr);
+      }
+    }
+
+    @Override
+    public void replace(FilterBypass fb, int offset, int length, String text,
+        AttributeSet attrs) throws BadLocationException {
+      if (numbers.matcher(text).matches()) {
+        super.replace(fb, offset, length, text, attrs);
+      }
+    }
+  }
+
+  private final class NumberOwnedListener implements
+      DocumentListener {
+    private boolean inEvent = false;
+
+    private void textChanged() {
+      if (inEvent) return;
+      inEvent = true;
+      numOwnedTextChanged(numberOwnedField.getText());
+      inEvent = false;
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+      textChanged();
+    }
+
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+      textChanged();
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {}
+  }
+
+  private final class ObjectListCellRenderer implements ListCellRenderer<LObject> {
     private final int maxIconWidth;
     private final int maxLabelWidth;
     private final int padding = 10;
@@ -167,7 +251,8 @@ class ObjectSelector extends JPanel implements ItemListener,
         maxIconWidth = Math.max(maxIconWidth, objImage.getWidth(null));
         maxHeight = Math.max(maxHeight, objImage.getHeight(null));
         maxLabelWidth = Math.max(maxLabelWidth, metrics.stringWidth(obj.name));
-        maxRemainingWidth = Math.max(maxRemainingWidth, metrics.stringWidth("10/10"));
+        maxRemainingWidth = Math.max(maxRemainingWidth, metrics.stringWidth("100/100"));
+       // People who own more than 100 of some object are crazy.
       }
 
       this.maxIconWidth = maxIconWidth;
@@ -223,7 +308,12 @@ class ObjectSelector extends JPanel implements ItemListener,
         g2d.drawString(obj.name, x, textY);
 
         x += maxLabelWidth + padding;
-        g2d.drawString("10/10", x, textY);
+        String text = "0";
+        Integer numOwned = prefs.getNumOwned(obj.id);
+        if (numOwned != null) {
+          text += "/" + numOwned;
+        }
+        g2d.drawString(text, x, textY);
       }
     }
   }

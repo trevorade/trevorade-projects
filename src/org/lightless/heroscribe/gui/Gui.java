@@ -263,7 +263,7 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
 
     content.setLayout(new BorderLayout());
 
-    tools = new ToolsPanel(this);
+    tools = new ToolsPanel(this, prefs);
     board = new Board(this);
 
     tools.setPreferredSize(tools.getMinimumSize());
