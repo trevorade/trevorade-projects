@@ -141,13 +141,13 @@ public class Preferences extends DefaultHandler {
       out.println("<?xml version=\"1.0\"?>");
       out.println("<preferences>");
 
-      out.printf("<ghostscript path=\"%s\"/>\n\n", ghostscriptExec
+      out.printf("  <ghostscript path=\"%s\"/>\n\n", ghostscriptExec
           .getAbsoluteFile().toString().replaceAll("\"", "&quot;"));
 
-      out.printf("<region value=\"%s\"/>\n\n", region.toString());
+      out.printf("  <region value=\"%s\"/>\n\n", region.toString());
 
       for (String lObjectId : numberOwnedByLObjectId.keySet()) {
-        out.printf("<owned id=\"%s\" value=\"%d\"/>\n", lObjectId,
+        out.printf("  <owned id=\"%s\" value=\"%d\"/>\n", lObjectId,
             numberOwnedByLObjectId.get(lObjectId));
       }
 
