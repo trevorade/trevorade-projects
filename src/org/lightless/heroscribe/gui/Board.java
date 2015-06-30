@@ -69,6 +69,7 @@ public class Board extends JPanel implements MouseInputListener {
     this.revalidate();
   }
 
+  @Override
   public void paintComponent(Graphics g) {
     super.paintComponent(g);
 
@@ -232,14 +233,17 @@ public class Board extends JPanel implements MouseInputListener {
     gui.status.setText(new String(sb));
   }
 
+  @Override
   public void mouseDragged(MouseEvent e) {
     updatePosition(e);
   }
 
+  @Override
   public void mouseMoved(MouseEvent e) {
     updatePosition(e);
   }
 
+  @Override
   public void mouseExited(MouseEvent e) {
     lastRow = lastColumn = -1;
     lastTop = lastLeft = -1;
@@ -247,6 +251,7 @@ public class Board extends JPanel implements MouseInputListener {
     repaint();
   }
 
+  @Override
   public void mousePressed(MouseEvent e) {
     updatePosition(e);
 
@@ -331,13 +336,16 @@ public class Board extends JPanel implements MouseInputListener {
     displayStatus();
   }
 
+  @Override
   public void mouseReleased(MouseEvent e) {
     isPaintingDark = false;
   }
 
+  @Override
   public void mouseClicked(MouseEvent e) {
   }
 
+  @Override
   public void mouseEntered(MouseEvent e) {
   }
 

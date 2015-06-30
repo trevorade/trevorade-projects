@@ -49,6 +49,7 @@ public class QObject implements Comparable<QObject> {
     return ++count;
   }
 
+  @Override
   public int compareTo(QObject that) {
     if (this.zorder < that.zorder)
       return -1;
@@ -62,6 +63,7 @@ public class QObject implements Comparable<QObject> {
     return 0;
   }
 
+  @Override
   public String toString() {
     return objects.getObject(id).toString() + " ( " + Float.toString(zorder)
         + " )";

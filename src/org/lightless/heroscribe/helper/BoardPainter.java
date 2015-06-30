@@ -1,16 +1,16 @@
 /*
   HeroScribe
   Copyright (C) 2002-2004 Flavio Chierichetti and Valerio Chierichetti
-   
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License version 2 (not
   later versions) as published by the Free Software Foundation.
- 
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -235,6 +235,9 @@ public class BoardPainter implements ImageObserver {
       x -= yoffset;
       y += xoffset;
       break;
+
+    default:
+      throw new VerifyError("Bad rotation!");
     }
 
     x = getX(column, x);
@@ -303,6 +306,7 @@ public class BoardPainter implements ImageObserver {
     return true;
   }
 
+  @Override
   public boolean imageUpdate(Image img, int infoflags, int x, int y, int width,
       int height) {
     return false;

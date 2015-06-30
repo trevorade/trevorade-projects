@@ -1,16 +1,16 @@
 /*
   HeroScribe
   Copyright (C) 2002-2004 Flavio Chierichetti and Valerio Chierichetti
-   
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License version 2 (not
   later versions) as published by the Free Software Foundation.
- 
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -48,6 +48,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileFilter;
 
 import org.lightless.heroscribe.Command;
@@ -122,7 +123,7 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
     updateTitle();
 
     addWindowListener(this);
-    setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+    setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
     Toolkit tk = Toolkit.getDefaultToolkit();
 
@@ -321,6 +322,7 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
     return quest;
   }
 
+  @Override
   public void itemStateChanged(ItemEvent e) {
     if (e.getStateChange() == ItemEvent.SELECTED) {
       if (e.getSource() instanceof AbstractButton) {
@@ -365,6 +367,7 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
     }
   }
 
+  @Override
   public void actionPerformed(ActionEvent e) {
     JMenuItem source = (JMenuItem) e.getSource();
 
@@ -586,6 +589,7 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
       return null;
   }
 
+  @Override
   public void windowClosing(WindowEvent e) {
     if (!quest.isModified()
         || JOptionPane.showConfirmDialog(this,
@@ -604,21 +608,27 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
     }
   }
 
+  @Override
   public void windowActivated(WindowEvent e) {
   }
 
+  @Override
   public void windowClosed(WindowEvent e) {
   }
 
+  @Override
   public void windowDeactivated(WindowEvent e) {
   }
 
+  @Override
   public void windowDeiconified(WindowEvent e) {
   }
 
+  @Override
   public void windowIconified(WindowEvent e) {
   }
 
+  @Override
   public void windowOpened(WindowEvent e) {
   }
 }
@@ -628,6 +638,7 @@ class GhostScriptFileFilter extends FileFilter {
     super();
   }
 
+  @Override
   public boolean accept(File f) {
     if (f.isDirectory())
       return true;
@@ -641,6 +652,7 @@ class GhostScriptFileFilter extends FileFilter {
     return false;
   }
 
+  @Override
   public String getDescription() {
     if (OS.isWindows())
       return "Ghostscript Shell (gswin32c.exe)";
@@ -658,11 +670,13 @@ class ActualFileFilter extends FileFilter {
     this.description = description;
   }
 
+  @Override
   public boolean accept(File f) {
     return f.isDirectory()
         || f.getName().toLowerCase().endsWith("." + extension);
   }
 
+  @Override
   public String getDescription() {
     return description;
   }
@@ -698,7 +712,7 @@ class RegionButtonModel extends JToggleButton.ToggleButtonModel {
     super();
     this.region = region;
   }
-  
+
   public Region getRegion() {
     return region;
   }

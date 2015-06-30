@@ -140,6 +140,7 @@ class SquareDisplayer extends JPanel implements ListSelectionListener,
       list.setSelectedIndex(0);
   }
 
+  @Override
   public void valueChanged(ListSelectionEvent e) {
     @SuppressWarnings("unchecked")
     JList<QObject> list = (JList<QObject>) e.getSource();
@@ -163,6 +164,7 @@ class SquareDisplayer extends JPanel implements ListSelectionListener,
     }
   }
 
+  @Override
   public void actionPerformed(ActionEvent e) {
     QObject obj = (QObject) list.getSelectedValue();
     JButton button = (JButton) e.getSource();

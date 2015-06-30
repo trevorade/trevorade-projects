@@ -50,10 +50,12 @@ public class LObject implements Comparable<LObject> {
     return this.iconsByRegion.get(region);
   }
 
+  @Override
   public int compareTo(LObject that) {
     return name.compareTo(that.name);
   }
 
+  @Override
   public String toString() {
     return name;
   }

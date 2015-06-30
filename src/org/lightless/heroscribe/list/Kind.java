@@ -35,6 +35,7 @@ public class Kind implements Comparable<Kind> {
     return count++;
   }
 
+  @Override
   public int compareTo(Kind that) {
     if (this.order < that.order)
       return -1;
@@ -44,6 +45,7 @@ public class Kind implements Comparable<Kind> {
     return 0;
   }
 
+  @Override
   public String toString() {
     return name;
   }

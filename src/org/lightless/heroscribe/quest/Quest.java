@@ -216,10 +216,12 @@ class ObjectsIterator implements java.util.Iterator<QObject> {
     hasEnded = true;
   }
 
+  @Override
   public boolean hasNext() {
     return !hasEnded;
   }
 
+  @Override
   public QObject next() throws NoSuchElementException {
     if (hasNext()) {
       QObject obj = currentBoardIterator.next();
@@ -229,6 +231,7 @@ class ObjectsIterator implements java.util.Iterator<QObject> {
       throw new NoSuchElementException();
   }
 
+  @Override
   public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }

@@ -1,16 +1,16 @@
 /*
   HeroScribe
   Copyright (C) 2002-2004 Flavio Chierichetti and Valerio Chierichetti
-   
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License version 2 (not
   later versions) as published by the Free Software Foundation.
- 
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -52,22 +52,23 @@ class ObjectSelector extends JPanel implements ItemListener,
 
   private Gui gui;
 
+  private JComboBox<Kind> kindsComboBox;
   private JPanel objectsPanel;
   private CardLayout cardLayout;
-  private JComboBox<Kind> kindsComboBox;
+
   private TreeMap<String, JList<LObject>> kindLists;
 
   private String selectedObject;
-  private int objectRotation;
 
   public ObjectSelector(Gui gui) {
     super();
 
     this.gui = gui;
 
+    kindsComboBox = new JComboBox<>();
     objectsPanel = new JPanel();
     cardLayout = new CardLayout();
-    kindsComboBox = new JComboBox<>();
+
     kindLists = new TreeMap<>();
 
     selectedObject = null;
@@ -75,8 +76,10 @@ class ObjectSelector extends JPanel implements ItemListener,
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     objectsPanel.setLayout(cardLayout);
 
+    // Add a checkbox to limit display to owned items (non-zero or greater than 1).
     add(kindsComboBox);
     add(objectsPanel);
+    // Add a panel with an input to modify how many you own as well as a larger preview (if applicable for the selected kind)
 
     for (Kind kind : gui.getObjects().kindsIterable()) {
       JList<LObject> list = new JList<>(new DefaultListModel<LObject>());
@@ -108,10 +111,6 @@ class ObjectSelector extends JPanel implements ItemListener,
     return selectedObject;
   }
 
-//  public int getSelectedObjectRotation() {
-//    return objectRotation;
-//  }
-
   private void setSelectedObject(LObject obj) {
     if (obj != null) {
       selectedObject = obj.id;
@@ -124,6 +123,7 @@ class ObjectSelector extends JPanel implements ItemListener,
 
   /* -- */
 
+  @Override
   public void itemStateChanged(ItemEvent e) {
     if (e.getStateChange() == ItemEvent.SELECTED) {
       @SuppressWarnings("unchecked")
@@ -137,6 +137,7 @@ class ObjectSelector extends JPanel implements ItemListener,
     }
   }
 
+  @Override
   public void valueChanged(ListSelectionEvent e) {
     @SuppressWarnings("unchecked")
     JList<LObject> list = (JList<LObject>) e.getSource();
@@ -198,7 +199,7 @@ class ObjectSelector extends JPanel implements ItemListener,
 
         this.setPreferredSize(preferredSize);
       }
-      
+
       @Override
       public void paint(Graphics g) {
         final int width = getSize().width;

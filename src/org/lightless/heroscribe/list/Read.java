@@ -56,6 +56,7 @@ public class Read extends DefaultHandler {
 
   /* --- */
 
+  @Override
   public InputSource resolveEntity(String publicId, String systemId) {
     if (publicId.equals("-//org.lightless//HeroScribe Object List 1.5//EN"))
       return new InputSource("DtdXsd/objectList-1.5.dtd");
@@ -63,15 +64,18 @@ public class Read extends DefaultHandler {
       return null;
   }
 
+  @Override
   public void error(SAXParseException e) throws SAXException {
     throw new SAXException(e);
   }
 
+  @Override
   public void startDocument() {
     content = new StringBuffer();
     onBoard = false;
   }
 
+  @Override
   public void startElement(String uri, String localName, String qName,
       Attributes attrs) throws SAXException {
     content = new StringBuffer();
@@ -143,10 +147,12 @@ public class Read extends DefaultHandler {
     }
   }
 
+  @Override
   public void characters(char[] ch, int start, int length) {
     content.append(ch, start, length);
   }
 
+  @Override
   public void endElement(String uri, String localName, String qName)
       throws SAXException {
     if (qName == "board") {
@@ -167,6 +173,7 @@ public class Read extends DefaultHandler {
     }
   }
 
+  @Override
   public void endDocument() {
     content = null;
     pieceBuilder = null;

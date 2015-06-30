@@ -1,16 +1,16 @@
 /*
   HeroScribe
   Copyright (C) 2002-2004 Flavio Chierichetti and Valerio Chierichetti
-   
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License version 2 (not
   later versions) as published by the Free Software Foundation.
- 
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -94,6 +94,7 @@ public class Preferences extends DefaultHandler {
 
   /* Read XML */
 
+  @Override
   public void startElement(String uri, String localName, String qName,
       Attributes attrs) throws SAXException {
     if (qName == "ghostscript") {
@@ -111,20 +112,18 @@ public class Preferences extends DefaultHandler {
   /* Write XML */
 
   public void write() throws Exception {
-    PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(
-        Constants.preferencesFile)));
+    try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(
+        Constants.preferencesFile)))) {
+      out.println("<?xml version=\"1.0\"?>");
+      out.println("<preferences>");
 
-    out.println("<?xml version=\"1.0\"?>");
-    out.println("<preferences>");
+      out.println("<ghostscript path=\""
+          + ghostscriptExec.getAbsoluteFile().toString()
+              .replaceAll("\"", "&quot;") + "\"/>");
 
-    out.println("<ghostscript path=\""
-        + ghostscriptExec.getAbsoluteFile().toString()
-            .replaceAll("\"", "&quot;") + "\"/>");
+      out.printf("<region value=\"%s\"/>\n", region.toString());
 
-    out.printf("<region value=\"%s\"/>\n", region.toString());
-
-    out.println("</preferences>");
-
-    out.close();
+      out.println("</preferences>");
+    }
   }
 }

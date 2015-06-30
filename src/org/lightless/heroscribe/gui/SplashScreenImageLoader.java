@@ -64,6 +64,7 @@ public class SplashScreenImageLoader extends JWindow {
     setVisible(false);
   }
 
+  @Override
   public void paint(Graphics g) {
     if (mt.checkID(splashID)) {
       g.drawImage(splash, 0, 0, this);

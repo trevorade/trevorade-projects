@@ -107,6 +107,7 @@ class ToolsPanel extends JPanel implements ItemListener {
     return selected;
   }
 
+  @Override
   public void itemStateChanged(ItemEvent e) {
     JToggleButton source = (JToggleButton) e.getSource();
 
