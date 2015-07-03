@@ -56,6 +56,7 @@ public class QBoard {
     objects.add(newObj);
 
     quest.setModified(true);
+    quest.objectAdded(newObj.id);
 
     return true;
   }
@@ -63,6 +64,7 @@ public class QBoard {
   public boolean removeObject(QObject obj) {
     if (objects.remove(obj)) {
       quest.setModified(true);
+      quest.objectRemoved(obj.id);
 
       return true;
     } else

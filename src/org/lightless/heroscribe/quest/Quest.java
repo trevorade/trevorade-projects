@@ -1,16 +1,16 @@
 /*
   HeroScribe
   Copyright (C) 2002-2004 Flavio Chierichetti and Valerio Chierichetti
-   
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License version 2 (not
   later versions) as published by the Free Software Foundation.
- 
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
- 
+
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -19,7 +19,12 @@
 package org.lightless.heroscribe.quest;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Vector;
 
@@ -38,6 +43,9 @@ public class Quest {
   private boolean[][][] horizontalBridges, verticalBridges;
 
   private boolean modified;
+
+  private final Map<String, Integer> objectCountById;
+  private final Collection<ObjectCountListener> objectCountListeners;
 
   public Quest(int width, int height, LBoard board, File file, Region region) {
     this.width = width;
@@ -61,6 +69,9 @@ public class Quest {
 
     this.file = file;
     modified = false;
+
+    objectCountById = new HashMap<>();
+    objectCountListeners = new HashSet<>();
   }
 
   public void setHorizontalBridge(boolean value, int column, int row, int top) {
@@ -168,6 +179,46 @@ public class Quest {
     Write.write(this);
 
     modified = false;
+  }
+
+  // Called by QBoard.
+  void objectAdded(String objId) {
+    if (objectCountById.containsKey(objId)) {
+      objectCountById.put(objId, 1 + objectCountById.get(objId));
+    } else {
+      objectCountById.put(objId, 1);
+    }
+    notifyObjectCountListeners();
+  }
+
+  // Called by QBoard.
+  void objectRemoved(String objId) {
+    objectCountById.put(objId, -1 + objectCountById.get(objId));
+    notifyObjectCountListeners();
+  }
+
+  public void addListener(ObjectCountListener listener) {
+    objectCountListeners.add(listener);
+  }
+
+  public void removeListener(ObjectCountListener listener) {
+    objectCountListeners.remove(listener);
+  }
+
+  public int getNumInQuest(String objId) {
+    if (!objectCountById.containsKey(objId))
+      return 0;
+    return objectCountById.get(objId);
+  }
+
+  private void notifyObjectCountListeners() {
+    for (ObjectCountListener listener : objectCountListeners) {
+      listener.objectCountChanged();
+    }
+  }
+
+  public interface ObjectCountListener {
+    void objectCountChanged();
   }
 }
 

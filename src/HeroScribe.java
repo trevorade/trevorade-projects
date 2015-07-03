@@ -55,11 +55,13 @@ public class HeroScribe {
 
       System.err.println("objects read.");
 
-      new SplashScreenImageLoader(objects);
+      @SuppressWarnings("unused")
+      SplashScreenImageLoader imageLoader = new SplashScreenImageLoader(objects);
 
       quest = new Quest(1, 1, objects.getBoard(), null, preferences.getRegion());
 
-      new Gui(preferences, objects, quest);
+      @SuppressWarnings("unused")
+      Gui gui = new Gui(preferences, objects, quest);
 
       System.err.println("gui done.");
     } catch (Exception e) {

@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
 <preferences>
-<ghostscript path="E:\DevTools\gs\gs9.16\bin\gswin32c.exe"/>
+  <ghostscript path="E:\DevTools\gs\gs9.16\bin\gswin32c.exe"/>
 
-<region value="USA"/>
+  <region value="USA"/>
 
-<owned id="Wizard" value="1"/>
-<owned id="Dwarf" value="1"/>
-<owned id="Elf" value="1"/>
-<owned id="Barbarian" value="1"/>
+  <owned id="Dwarf" value="1"/>
+  <owned id="Wizard" value="1"/>
+  <owned id="Elf" value="1"/>
+  <owned id="Barbarian" value="1"/>
+  <owned id="ChaosWarrior" value="4"/>
 </preferences>

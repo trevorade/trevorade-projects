@@ -31,6 +31,7 @@ import java.awt.RenderingHints;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Collections;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
@@ -56,6 +57,7 @@ import javax.swing.text.DocumentFilter;
 import org.lightless.heroscribe.Preferences;
 import org.lightless.heroscribe.list.Kind;
 import org.lightless.heroscribe.list.LObject;
+import org.lightless.heroscribe.quest.Quest.ObjectCountListener;
 
 class ObjectSelector extends JPanel implements ItemListener,
     ListSelectionListener {
@@ -129,6 +131,12 @@ class ObjectSelector extends JPanel implements ItemListener,
     }
 
     kindsComboBox.addItemListener(this);
+
+    gui.getQuest().addListener(new ObjectCountListener() {
+      @Override public void objectCountChanged() {
+        objectsPanel.repaint();
+      }
+    });
   }
 
   public String getSelectedObject() {
@@ -308,7 +316,7 @@ class ObjectSelector extends JPanel implements ItemListener,
         g2d.drawString(obj.name, x, textY);
 
         x += maxLabelWidth + padding;
-        String text = "0";
+        String text = Integer.toString(gui.getQuest().getNumInQuest(obj.id));
         Integer numOwned = prefs.getNumOwned(obj.id);
         if (numOwned != null) {
           text += "/" + numOwned;
