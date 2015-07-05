@@ -20,7 +20,6 @@ package org.lightless.heroscribe.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -80,7 +79,7 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
   JMenuItem newKey, openKey, saveKey, saveAsKey, exportPdfKey, exportEpsKey,
       exportPngKey, ghostscriptKey, quitKey, listKey, aboutKey;
 
-  JScrollPane scrollPane;
+  JSplitPane contentSplitPane;
 
   Vector<SpecialQuestMenuItem> newSpecialKeys;
 
@@ -125,10 +124,8 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
     addWindowListener(this);
     setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-    Toolkit tk = Toolkit.getDefaultToolkit();
-
-    setLocation((tk.getScreenSize().width - this.getWidth()) / 2,
-        (tk.getScreenSize().height - this.getHeight()) / 2);
+    setLocation(preferences.getWindowLocation());
+    setSize(preferences.getWindowSize());
 
     this.setVisible(true);
   }
@@ -266,9 +263,12 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
     tools = new ToolsPanel(this, prefs);
     board = new Board(this);
 
-    tools.setPreferredSize(tools.getMinimumSize());
-
-    content.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, tools, new JScrollPane(board)));
+    contentSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, tools, new JScrollPane(board));
+    Integer dividerLocation = prefs.getDividerLocation();
+    if (dividerLocation != null) {
+      contentSplitPane.setDividerLocation(dividerLocation);
+    }
+    content.add(contentSplitPane);
 
     bottom.setLayout(new BorderLayout());
 
@@ -288,10 +288,6 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
     } else {
       content.add(bottom, BorderLayout.SOUTH);
     }
-
-    /* --- */
-
-    setSize(1135, 785);
   }
 
   public Region getMenuRegion() {
@@ -598,6 +594,8 @@ public class Gui extends JFrame implements WindowListener, ItemListener,
             JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 
       try {
+        prefs.setWindowDimensions(getLocation(), getSize());
+        prefs.setDividerLocation(contentSplitPane.getDividerLocation());
         prefs.write();
       } catch (Exception ex) {
         ex.printStackTrace();

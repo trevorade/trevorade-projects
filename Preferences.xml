@@ -2,6 +2,8 @@
 <preferences>
   <ghostscript path="E:\DevTools\gs\gs9.16\bin\gswin32c.exe"/>
 
+  <window x="264" y="180" width="1240" height="780" />
+  <divider location="281" />
   <region value="USA"/>
 
   <owned id="Dwarf" value="1"/>

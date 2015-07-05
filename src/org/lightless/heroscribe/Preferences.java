@@ -18,6 +18,9 @@
 
 package org.lightless.heroscribe;
 
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -37,6 +40,9 @@ import com.sun.istack.internal.Nullable;
 
 public class Preferences extends DefaultHandler {
   private File ghostscriptExec;
+  private Point windowLocation;
+  private Dimension windowSize;
+  private Integer dividerLocation;
   private Region region;
   private HashMap<String, Integer> numberOwnedByLObjectId;
 
@@ -44,6 +50,11 @@ public class Preferences extends DefaultHandler {
     super();
 
     ghostscriptExec = new File("");
+    windowSize = new Dimension(640, 480);
+    Toolkit tk = Toolkit.getDefaultToolkit();
+    windowLocation = new Point((tk.getScreenSize().width - (int) windowSize.getWidth()) / 2,
+        (tk.getScreenSize().height - (int) windowSize.getHeight()) / 2);
+    dividerLocation = null;
     region = Region.EUROPE;
     numberOwnedByLObjectId = new HashMap<>();
 
@@ -90,6 +101,27 @@ public class Preferences extends DefaultHandler {
     this.ghostscriptExec = ghostscriptExec;
   }
 
+  public Point getWindowLocation() {
+    return windowLocation;
+  }
+
+  public Dimension getWindowSize() {
+    return windowSize;
+  }
+
+  public void setWindowDimensions(Point windowLocation, Dimension windowSize) {
+    this.windowLocation = windowLocation;
+    this.windowSize = windowSize;
+  }
+
+  public @Nullable Integer getDividerLocation() {
+    return dividerLocation;
+  }
+
+  public void setDividerLocation(int dividerLocation) {
+    this.dividerLocation = dividerLocation;
+  }
+
   public Region getRegion() {
     return region;
   }
@@ -122,6 +154,17 @@ public class Preferences extends DefaultHandler {
         ghostscriptExec = file;
       }
     }
+    if (qName == "window") {
+      int x = Integer.parseInt(attrs.getValue("x"));
+      int y = Integer.parseInt(attrs.getValue("y"));
+      int width = Integer.parseInt(attrs.getValue("width"));
+      int height = Integer.parseInt(attrs.getValue("height"));
+      windowLocation.setLocation(x, y);
+      windowSize.setSize(width, height);
+    }
+    if (qName == "divider") {
+      dividerLocation = Integer.parseInt(attrs.getValue("location"));
+    }
     if (qName == "region") {
       region = Region.parse(attrs.getValue("value"));
     }
@@ -143,6 +186,14 @@ public class Preferences extends DefaultHandler {
       out.printf("  <ghostscript path=\"%s\"/>\n\n", ghostscriptExec
           .getAbsoluteFile().toString().replaceAll("\"", "&quot;"));
 
+      out.printf("  <window x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" />\n",
+          (int) windowLocation.getX(), (int) windowLocation.getY(), (int) windowSize.getWidth(),
+          (int) windowSize.getHeight());
+
+      if (dividerLocation != null) {
+        out.printf("  <divider location=\"%d\" />\n", dividerLocation.intValue());
+      }
+
       out.printf("  <region value=\"%s\"/>\n\n", region.toString());
 
       for (String lObjectId : numberOwnedByLObjectId.keySet()) {
@@ -153,4 +204,5 @@ public class Preferences extends DefaultHandler {
       out.println("</preferences>");
     }
   }
+
 }
