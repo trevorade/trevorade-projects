@@ -31,7 +31,6 @@ import java.awt.RenderingHints;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Collections;
-import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
@@ -75,6 +74,7 @@ class ObjectSelector extends JPanel implements ItemListener,
   private TreeMap<String, JList<LObject>> kindLists;
 
   private String selectedObject;
+  private final int preferredWidth;
 
   public ObjectSelector(Gui gui, Preferences prefs) {
     super();
@@ -103,9 +103,10 @@ class ObjectSelector extends JPanel implements ItemListener,
     objectsPanel.setLayout(cardLayout);
 
     // Add a checkbox to limit display to owned items (non-zero or greater than 1).
-    add(kindsComboBox);
-    add(objectsPanel);
-    add(ownedPanel);
+    setLayout(new BorderLayout());
+    add(kindsComboBox, BorderLayout.NORTH);
+    add(objectsPanel, BorderLayout.CENTER);
+    add(ownedPanel, BorderLayout.SOUTH);
 
     for (Kind kind : gui.getObjects().kindsIterable()) {
       JList<LObject> list = new JList<>(new DefaultListModel<LObject>());
@@ -116,6 +117,7 @@ class ObjectSelector extends JPanel implements ItemListener,
       kindLists.put(kind.id, list);
       kindsComboBox.addItem(kind);
     }
+    kindsComboBox.setMaximumRowCount(kindsComboBox.getItemCount());
 
     for (LObject obj : gui.getObjects().objectsIterable()) {
       JList<LObject> list = kindLists.get(obj.kindId);
@@ -124,11 +126,14 @@ class ObjectSelector extends JPanel implements ItemListener,
       listModel.addElement(obj);
     }
 
+    int preferredWidth = 0;
     for (Kind kind : gui.getObjects().kindsIterable()) {
       JList<LObject> list = kindLists.get(kind.id);
       DefaultListModel<LObject> listModel = (DefaultListModel<LObject>) list.getModel();
       list.setCellRenderer(new ObjectListCellRenderer(Collections.list(listModel.elements())));
+      preferredWidth = Math.max(preferredWidth, (int) list.getPreferredSize().getWidth());
     }
+    this.preferredWidth = preferredWidth;
 
     kindsComboBox.addItemListener(this);
 
@@ -141,6 +146,11 @@ class ObjectSelector extends JPanel implements ItemListener,
 
   public String getSelectedObject() {
     return selectedObject;
+  }
+
+  @Override
+  public Dimension getPreferredSize() {
+    return new Dimension(preferredWidth, Integer.MAX_VALUE);
   }
 
   private void setSelectedObject(LObject obj) {
@@ -239,6 +249,9 @@ class ObjectSelector extends JPanel implements ItemListener,
     public void changedUpdate(DocumentEvent e) {}
   }
 
+  private static final int MAX_ICON_WIDTH = 64;
+  private static final int MAX_ICON_HEIGHT = 64;
+
   private final class ObjectListCellRenderer implements ListCellRenderer<LObject> {
     private final int maxIconWidth;
     private final int maxLabelWidth;
@@ -263,6 +276,9 @@ class ObjectSelector extends JPanel implements ItemListener,
        // People who own more than 100 of some object are crazy.
       }
 
+      maxIconWidth = Math.min(maxIconWidth, MAX_ICON_WIDTH);
+      maxHeight = Math.min(maxHeight, MAX_ICON_HEIGHT);
+
       this.maxIconWidth = maxIconWidth;
       this.maxLabelWidth = maxLabelWidth;
 
@@ -273,28 +289,72 @@ class ObjectSelector extends JPanel implements ItemListener,
     @Override
     public Component getListCellRendererComponent(JList<? extends LObject> list,
         LObject value, int index, boolean isSelected, boolean cellHasFocus) {
-      return new ObjectListCell(value,
-          isSelected ? list.getSelectionBackground() : list.getBackground(),
-          isSelected ? list.getSelectionForeground() : list.getForeground());
+      return new ObjectListCell(value, list, isSelected);
     }
 
     class ObjectListCell extends Component {
       private static final long serialVersionUID = -4296037614762334039L;
 
       private final LObject obj;
-      private final Color background;
-      private final Color foreground;
+      private final JList<? extends LObject> parentList;
+      private final boolean isSelected;
 
-      public ObjectListCell(LObject obj, Color background, Color foreground) {
+      public ObjectListCell(LObject obj, JList<? extends LObject> parentList, boolean isSelected) {
         this.obj = obj;
-        this.background = background;
-        this.foreground = foreground;
+        this.parentList = parentList;
+        this.isSelected = isSelected;
 
         this.setPreferredSize(preferredSize);
       }
 
+      private Color getBackground(boolean isSelected, boolean haveNone, boolean tooManyInQuest) {
+        if (isSelected) {
+            if (tooManyInQuest) {
+              return new Color(255, 51, 51);
+            } else if (haveNone) {
+              return new Color(90, 90, 90);
+            } else {
+              return parentList.getSelectionBackground();
+            }
+        } else {
+            if (tooManyInQuest) {
+              return new Color(255, 207, 207);
+            } else if (haveNone) {
+              return new Color(210, 210, 210);
+            } else {
+              return parentList.getBackground();
+            }
+        }
+      }
+
+      private Color getForeground(boolean isSelected, boolean haveNone, boolean tooManyInQuest) {
+        if (isSelected) {
+          if (haveNone) {
+            return new Color(210, 210, 210);
+          } else {
+            return parentList.getSelectionForeground();
+          }
+        } else {
+          if (tooManyInQuest) {
+            return new Color(79, 0, 0);
+          } else if (haveNone) {
+            return new Color(50, 50, 50);
+          } else {
+            return parentList.getForeground();
+          }
+        }
+      }
+
       @Override
       public void paint(Graphics g) {
+        final Integer numOwned = prefs.getNumOwned(obj.id);
+        final int numInQuest = gui.getQuest().getNumInQuest(obj.id);
+        final boolean haveNone = numOwned != null && numOwned < 1;
+        final boolean tooManyInQuest = numOwned != null && numInQuest > numOwned;
+
+        final Color foreground = getForeground(isSelected, haveNone, tooManyInQuest);
+        final Color background = getBackground(isSelected, haveNone, tooManyInQuest);
+
         final int width = getSize().width;
         final int height = getSize().height;
         int x = 0;
@@ -308,7 +368,26 @@ class ObjectSelector extends JPanel implements ItemListener,
         Image image = gui.getObjects().getObject(obj.id).getIcon(gui.getMenuRegion()).getImage();
         int imageWidth = image.getWidth(null);
         int imageHeight = image.getHeight(null);
-        g2d.drawImage(image, x + (maxIconWidth - imageWidth) / 2, (height - imageHeight) / 2, null);
+        if (imageWidth > MAX_ICON_WIDTH || imageHeight > MAX_ICON_HEIGHT) {
+          imageWidth = Math.min(imageWidth, MAX_ICON_WIDTH);
+          imageHeight = Math.min(imageHeight, MAX_ICON_HEIGHT);
+
+          // Destination rectangle
+          final int dx1 = x + (maxIconWidth - imageWidth) / 2;
+          final int dy1 = (height - imageHeight) / 2;
+          final int dx2 = dx1 + imageWidth;
+          final int dy2 = dy1 + imageHeight;
+
+          // Source rectangle
+          final int sx1 = 0;
+          final int sy1 = 0;
+          final int sx2 = sx1 + imageWidth;
+          final int sy2 = sy1 + imageHeight;
+
+          g2d.drawImage(image, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, null);
+        } else {
+          g2d.drawImage(image, x + (maxIconWidth - imageWidth) / 2, (height - imageHeight) / 2, null);
+        }
 
         x += maxIconWidth + padding;
         g2d.setColor(foreground);
@@ -317,7 +396,6 @@ class ObjectSelector extends JPanel implements ItemListener,
 
         x += maxLabelWidth + padding;
         String text = Integer.toString(gui.getQuest().getNumInQuest(obj.id));
-        Integer numOwned = prefs.getNumOwned(obj.id);
         if (numOwned != null) {
           text += "/" + numOwned;
         }
