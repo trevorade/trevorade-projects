@@ -2,106 +2,106 @@
 <preferences>
   <ghostscript path="E:\DevTools\gs\gs9.16\bin\gswin32c.exe"/>
 
-  <window x="264" y="180" width="1238" height="777" />
-  <divider location="278" />
+  <window x="-8" y="-8" width="1874" height="1096" />
+  <divider location="274" />
   <region value="USA"/>
 
-  <owned id="IceVault3x4" value="0"/>
-  <owned id="WeaponsRack" value="1"/>
-  <owned id="ScepterRoom" value="0"/>
-  <owned id="Gargoyle" value="1"/>
-  <owned id="Throne" value="1"/>
-  <owned id="OgreChampion" value="0"/>
-  <owned id="LongStairway" value="2"/>
-  <owned id="StarBurst" value="0"/>
-  <owned id="IcyRiver1x3" value="0"/>
-  <owned id="CloudOfChaos" value="0"/>
-  <owned id="Scout" value="0"/>
-  <owned id="FrozenCryptRoom" value="0"/>
-  <owned id="ThroneRoom" value="1"/>
-  <owned id="SingleBlockedSquare" value="35"/>
-  <owned id="Crossbowman" value="0"/>
-  <owned id="Portcullis" value="0"/>
-  <owned id="Dwarf" value="1"/>
-  <owned id="OgreWarrior" value="0"/>
-  <owned id="SorcerersTable" value="1"/>
-  <owned id="SlipperyIce1x1" value="0"/>
-  <owned id="Fireplace" value="1"/>
-  <owned id="Stalactite" value="0"/>
-  <owned id="IceTunnelC" value="0"/>
-  <owned id="GiantWolf" value="0"/>
-  <owned id="IceGremlinTreasureRoom" value="1"/>
-  <owned id="SeatOfPower" value="1"/>
-  <owned id="LongPitTrap" value="0"/>
-  <owned id="StoneDoorway" value="0"/>
-  <owned id="Surface" value="0"/>
+  <owned id="AlchemistsBench" value="1"/>
   <owned id="Barbarian" value="1"/>
-  <owned id="ElvenArcher" value="0"/>
+  <owned id="BattleRoom" value="1"/>
+  <owned id="Bookcase" value="2"/>
+  <owned id="BottomlessChasm" value="0"/>
+  <owned id="CageRoom" value="1"/>
+  <owned id="CarpetRoom" value="1"/>
+  <owned id="ChaosRoom" value="0"/>
+  <owned id="ChaosWarrior" value="4"/>
+  <owned id="CliffCorridor" value="1"/>
+  <owned id="CloudOfChaos" value="0"/>
+  <owned id="Coffin" value="4"/>
+  <owned id="Crossbowman" value="0"/>
+  <owned id="CrystalKey" value="1"/>
   <owned id="Cupboard" value="1"/>
-  <owned id="Tomb" value="1"/>
-  <owned id="FrozenHorror" value="0"/>
-  <owned id="Stairs" value="0"/>
+  <owned id="DarkWarrior" value="0"/>
+  <owned id="DeathMist" value="0"/>
   <owned id="DeepPitTrap" value="0"/>
+  <owned id="DeepPitTrapAlternate" value="0"/>
+  <owned id="Door" value="21"/>
+  <owned id="DoubleBlockedSquare" value="2"/>
+  <owned id="Dwarf" value="1"/>
+  <owned id="Elf" value="1"/>
+  <owned id="ElvenArcher" value="0"/>
+  <owned id="ElvenWarrior" value="0"/>
+  <owned id="FallingRock" value="12"/>
+  <owned id="Fimir" value="3"/>
+  <owned id="Fireplace" value="1"/>
+  <owned id="Fog" value="0"/>
+  <owned id="FrozenCryptRoom" value="0"/>
+  <owned id="FrozenHorror" value="0"/>
+  <owned id="Gargoyle" value="1"/>
+  <owned id="GiantStoneBoulder" value="1"/>
+  <owned id="GiantWolf" value="0"/>
+  <owned id="Goblin" value="6"/>
+  <owned id="Halberdier" value="0"/>
+  <owned id="IceCaveEntrance" value="0"/>
+  <owned id="IceGremlin" value="0"/>
+  <owned id="IceGremlinTreasureRoom" value="1"/>
+  <owned id="IceLedge" value="0"/>
   <owned id="IceSlide" value="1"/>
   <owned id="IceTunnelA" value="0"/>
-  <owned id="FallingRock" value="12"/>
   <owned id="IceTunnelB" value="0"/>
-  <owned id="PitRoom" value="1"/>
-  <owned id="IcyRiver1x8" value="0"/>
-  <owned id="DeathMist" value="0"/>
-  <owned id="CrystalKey" value="1"/>
-  <owned id="Mummy" value="2"/>
-  <owned id="IceCaveEntrance" value="0"/>
-  <owned id="Table" value="2"/>
-  <owned id="CarpetRoom" value="1"/>
-  <owned id="DoubleBlockedSquare" value="2"/>
-  <owned id="CageRoom" value="1"/>
-  <owned id="GiantStoneBoulder" value="1"/>
-  <owned id="Elf" value="1"/>
-  <owned id="Goblin" value="6"/>
-  <owned id="OpenDoor" value="16"/>
-  <owned id="Yeti" value="0"/>
-  <owned id="IceLedge" value="0"/>
-  <owned id="Swordsman" value="0"/>
-  <owned id="PolarWarbear" value="0"/>
-  <owned id="ChaosWarrior" value="4"/>
-  <owned id="DeepPitTrapAlternate" value="0"/>
-  <owned id="ElvenWarrior" value="0"/>
-  <owned id="OgreChieftain" value="0"/>
-  <owned id="IceGremlin" value="0"/>
-  <owned id="Fimir" value="3"/>
-  <owned id="CliffCorridor" value="1"/>
-  <owned id="OgreLord" value="0"/>
-  <owned id="Fog" value="0"/>
-  <owned id="TrapDoor" value="4"/>
-  <owned id="Zombie" value="2"/>
-  <owned id="DarkWarrior" value="0"/>
-  <owned id="OgreThrone" value="0"/>
-  <owned id="Halberdier" value="0"/>
-  <owned id="RevolvingRoom" value="1"/>
-  <owned id="BottomlessChasm" value="0"/>
-  <owned id="InnerSanctum" value="0"/>
-  <owned id="SlipperyIce3x1" value="1"/>
-  <owned id="Orc" value="8"/>
-  <owned id="SecretDoorAlternate" value="11"/>
+  <owned id="IceTunnelC" value="0"/>
   <owned id="IceVault2x3" value="0"/>
+  <owned id="IceVault3x4" value="0"/>
+  <owned id="IcyRiver1x3" value="0"/>
+  <owned id="IcyRiver1x8" value="0"/>
+  <owned id="InnerSanctum" value="0"/>
   <owned id="LivingFogRoom" value="1"/>
-  <owned id="Coffin" value="4"/>
-  <owned id="Rack" value="1"/>
-  <owned id="AlchemistsBench" value="1"/>
-  <owned id="SecretDoor" value="0"/>
-  <owned id="Quicksand" value="0"/>
-  <owned id="Skeleton" value="4"/>
-  <owned id="ShortStairway" value="4"/>
-  <owned id="ChaosRoom" value="0"/>
+  <owned id="LongPitTrap" value="0"/>
+  <owned id="LongStairway" value="2"/>
+  <owned id="Mummy" value="2"/>
+  <owned id="OgreChampion" value="0"/>
+  <owned id="OgreChieftain" value="0"/>
+  <owned id="OgreLord" value="0"/>
+  <owned id="OgreThrone" value="0"/>
+  <owned id="OgreWarrior" value="0"/>
+  <owned id="OpenDoor" value="16"/>
+  <owned id="Orc" value="8"/>
+  <owned id="PitRoom" value="1"/>
   <owned id="PitTrap" value="6"/>
-  <owned id="TreasureChest" value="3"/>
-  <owned id="Bookcase" value="2"/>
-  <owned id="BattleRoom" value="1"/>
-  <owned id="Door" value="21"/>
-  <owned id="Stairway" value="1"/>
-  <owned id="SunEyeRoom" value="1"/>
-  <owned id="SlipperyIce2x3" value="1"/>
+  <owned id="PolarWarbear" value="0"/>
+  <owned id="Portcullis" value="0"/>
+  <owned id="Quicksand" value="0"/>
+  <owned id="Rack" value="1"/>
+  <owned id="RevolvingRoom" value="1"/>
+  <owned id="ScepterRoom" value="0"/>
+  <owned id="Scout" value="0"/>
+  <owned id="SeatOfPower" value="1"/>
+  <owned id="SecretDoor" value="0"/>
+  <owned id="SecretDoorAlternate" value="11"/>
+  <owned id="ShortStairway" value="4"/>
+  <owned id="SingleBlockedSquare" value="35"/>
+  <owned id="Skeleton" value="4"/>
+  <owned id="SlipperyIce1x1" value="0"/>
   <owned id="SlipperyIce2x1" value="1"/>
+  <owned id="SlipperyIce2x3" value="1"/>
+  <owned id="SlipperyIce3x1" value="1"/>
+  <owned id="SorcerersTable" value="1"/>
+  <owned id="Stairs" value="0"/>
+  <owned id="Stairway" value="1"/>
+  <owned id="Stalactite" value="0"/>
+  <owned id="StarBurst" value="0"/>
+  <owned id="StoneDoorway" value="0"/>
+  <owned id="SunEyeRoom" value="1"/>
+  <owned id="Surface" value="0"/>
+  <owned id="Swordsman" value="0"/>
+  <owned id="Table" value="2"/>
+  <owned id="Throne" value="1"/>
+  <owned id="ThroneRoom" value="1"/>
+  <owned id="Tomb" value="1"/>
+  <owned id="TrapDoor" value="4"/>
+  <owned id="TreasureChest" value="3"/>
+  <owned id="WeaponsRack" value="1"/>
   <owned id="Wizard" value="1"/>
+  <owned id="Yeti" value="0"/>
+  <owned id="Zombie" value="2"/>
 </preferences>

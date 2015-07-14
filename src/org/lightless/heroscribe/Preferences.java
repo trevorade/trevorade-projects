@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.TreeSet;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -196,7 +197,7 @@ public class Preferences extends DefaultHandler {
 
       out.printf("  <region value=\"%s\"/>\n\n", region.toString());
 
-      for (String lObjectId : numberOwnedByLObjectId.keySet()) {
+      for (String lObjectId : new TreeSet<>(numberOwnedByLObjectId.keySet())) {
         out.printf("  <owned id=\"%s\" value=\"%d\"/>\n", lObjectId,
             numberOwnedByLObjectId.get(lObjectId));
       }

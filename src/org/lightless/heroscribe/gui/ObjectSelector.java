@@ -28,6 +28,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Collections;
@@ -36,6 +38,7 @@ import java.util.regex.Pattern;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -66,6 +69,7 @@ class ObjectSelector extends JPanel implements ItemListener,
   private final Preferences prefs;
 
   private JComboBox<Kind> kindsComboBox;
+  private JCheckBox onlyShowOwnedCheckBox;
   private JPanel objectsPanel;
   private CardLayout cardLayout;
   private JPanel ownedPanel;
@@ -74,7 +78,6 @@ class ObjectSelector extends JPanel implements ItemListener,
   private TreeMap<String, JList<LObject>> kindLists;
 
   private String selectedObject;
-  private final int preferredWidth;
 
   public ObjectSelector(Gui gui, Preferences prefs) {
     super();
@@ -83,6 +86,7 @@ class ObjectSelector extends JPanel implements ItemListener,
     this.prefs = prefs;
 
     kindsComboBox = new JComboBox<>();
+    onlyShowOwnedCheckBox = new JCheckBox("Only Show Owned", false);
     objectsPanel = new JPanel();
     cardLayout = new CardLayout();
     ownedPanel = new JPanel();
@@ -102,9 +106,12 @@ class ObjectSelector extends JPanel implements ItemListener,
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     objectsPanel.setLayout(cardLayout);
 
-    // Add a checkbox to limit display to owned items (non-zero or greater than 1).
+    JPanel top = new JPanel(new BorderLayout());
+    top.add(kindsComboBox, BorderLayout.NORTH);
+    top.add(onlyShowOwnedCheckBox, BorderLayout.SOUTH);
+
     setLayout(new BorderLayout());
-    add(kindsComboBox, BorderLayout.NORTH);
+    add(top, BorderLayout.NORTH);
     add(objectsPanel, BorderLayout.CENTER);
     add(ownedPanel, BorderLayout.SOUTH);
 
@@ -119,21 +126,13 @@ class ObjectSelector extends JPanel implements ItemListener,
     }
     kindsComboBox.setMaximumRowCount(kindsComboBox.getItemCount());
 
-    for (LObject obj : gui.getObjects().objectsIterable()) {
-      JList<LObject> list = kindLists.get(obj.kindId);
-      DefaultListModel<LObject> listModel = (DefaultListModel<LObject>) list.getModel();
+    refreshObjectLists(false);
 
-      listModel.addElement(obj);
-    }
-
-    int preferredWidth = 0;
     for (Kind kind : gui.getObjects().kindsIterable()) {
       JList<LObject> list = kindLists.get(kind.id);
       DefaultListModel<LObject> listModel = (DefaultListModel<LObject>) list.getModel();
       list.setCellRenderer(new ObjectListCellRenderer(Collections.list(listModel.elements())));
-      preferredWidth = Math.max(preferredWidth, (int) list.getPreferredSize().getWidth());
     }
-    this.preferredWidth = preferredWidth;
 
     kindsComboBox.addItemListener(this);
 
@@ -142,15 +141,35 @@ class ObjectSelector extends JPanel implements ItemListener,
         objectsPanel.repaint();
       }
     });
+
+    onlyShowOwnedCheckBox.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        refreshObjectLists(onlyShowOwnedCheckBox.isSelected());
+      }
+    });
+  }
+
+  private void refreshObjectLists(boolean onlyShowOwnedObjects) {
+    for (String kind : kindLists.keySet()) {
+      ((DefaultListModel<LObject>)kindLists.get(kind).getModel()).clear();
+    }
+
+    for (LObject obj : gui.getObjects().objectsIterable()) {
+      Integer numOwned = prefs.getNumOwned(obj.id);
+      if (onlyShowOwnedObjects && numOwned != null && numOwned.intValue() == 0) {
+        continue;
+      }
+
+      JList<LObject> list = kindLists.get(obj.kindId);
+      DefaultListModel<LObject> listModel = (DefaultListModel<LObject>) list.getModel();
+
+      listModel.addElement(obj);
+    }
   }
 
   public String getSelectedObject() {
     return selectedObject;
-  }
-
-  @Override
-  public Dimension getPreferredSize() {
-    return new Dimension(preferredWidth, Integer.MAX_VALUE);
   }
 
   private void setSelectedObject(LObject obj) {
@@ -307,38 +326,28 @@ class ObjectSelector extends JPanel implements ItemListener,
         this.setPreferredSize(preferredSize);
       }
 
-      private Color getBackground(boolean isSelected, boolean haveNone, boolean tooManyInQuest) {
+      private Color getBackground(boolean isSelected, boolean tooManyInQuest) {
         if (isSelected) {
             if (tooManyInQuest) {
               return new Color(255, 51, 51);
-            } else if (haveNone) {
-              return new Color(90, 90, 90);
             } else {
               return parentList.getSelectionBackground();
             }
         } else {
             if (tooManyInQuest) {
               return new Color(255, 207, 207);
-            } else if (haveNone) {
-              return new Color(210, 210, 210);
             } else {
               return parentList.getBackground();
             }
         }
       }
 
-      private Color getForeground(boolean isSelected, boolean haveNone, boolean tooManyInQuest) {
+      private Color getForeground(boolean isSelected, boolean tooManyInQuest) {
         if (isSelected) {
-          if (haveNone) {
-            return new Color(210, 210, 210);
-          } else {
-            return parentList.getSelectionForeground();
-          }
+          return parentList.getSelectionForeground();
         } else {
           if (tooManyInQuest) {
             return new Color(79, 0, 0);
-          } else if (haveNone) {
-            return new Color(50, 50, 50);
           } else {
             return parentList.getForeground();
           }
@@ -352,8 +361,8 @@ class ObjectSelector extends JPanel implements ItemListener,
         final boolean haveNone = numOwned != null && numOwned < 1;
         final boolean tooManyInQuest = numOwned != null && numInQuest > numOwned;
 
-        final Color foreground = getForeground(isSelected, haveNone, tooManyInQuest);
-        final Color background = getBackground(isSelected, haveNone, tooManyInQuest);
+        final Color foreground = getForeground(isSelected, tooManyInQuest);
+        final Color background = getBackground(isSelected, tooManyInQuest);
 
         final int width = getSize().width;
         final int height = getSize().height;
@@ -400,6 +409,12 @@ class ObjectSelector extends JPanel implements ItemListener,
           text += "/" + numOwned;
         }
         g2d.drawString(text, x, textY);
+
+        if (haveNone && !tooManyInQuest) {
+          g2d.setColor(new Color(background.getRed(), background.getGreen(), background.getBlue(),
+              128));
+          g2d.fillRect(0, 0, width, height);
+        }
       }
     }
   }
