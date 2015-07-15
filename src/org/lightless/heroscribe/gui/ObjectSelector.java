@@ -59,6 +59,7 @@ import javax.swing.text.DocumentFilter;
 import org.lightless.heroscribe.Preferences;
 import org.lightless.heroscribe.list.Kind;
 import org.lightless.heroscribe.list.LObject;
+import org.lightless.heroscribe.quest.Quest;
 import org.lightless.heroscribe.quest.Quest.ObjectCountListener;
 
 class ObjectSelector extends JPanel implements ItemListener,
@@ -136,7 +137,7 @@ class ObjectSelector extends JPanel implements ItemListener,
 
     kindsComboBox.addItemListener(this);
 
-    gui.getQuest().addListener(new ObjectCountListener() {
+    Quest.addListener(new ObjectCountListener() {
       @Override public void objectCountChanged() {
         objectsPanel.repaint();
       }

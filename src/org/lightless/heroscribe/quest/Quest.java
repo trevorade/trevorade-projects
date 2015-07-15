@@ -44,7 +44,7 @@ public class Quest {
   private boolean modified;
 
   private final Map<String, Integer> objectCountById;
-  private final Collection<ObjectCountListener> objectCountListeners;
+  private final static Collection<ObjectCountListener> objectCountListeners = new HashSet<>();
 
   public Quest(int width, int height, LBoard board, File file, Region region) {
     this.width = width;
@@ -70,7 +70,6 @@ public class Quest {
     modified = false;
 
     objectCountById = new HashMap<>();
-    objectCountListeners = new HashSet<>();
   }
 
   public void setHorizontalBridge(boolean value, int column, int row, int top) {
@@ -196,11 +195,11 @@ public class Quest {
     notifyObjectCountListeners();
   }
 
-  public void addListener(ObjectCountListener listener) {
+  public static void addListener(ObjectCountListener listener) {
     objectCountListeners.add(listener);
   }
 
-  public void removeListener(ObjectCountListener listener) {
+  public static void removeListener(ObjectCountListener listener) {
     objectCountListeners.remove(listener);
   }
 
@@ -210,7 +209,7 @@ public class Quest {
     return objectCountById.get(objId);
   }
 
-  private void notifyObjectCountListeners() {
+  private static void notifyObjectCountListeners() {
     for (ObjectCountListener listener : objectCountListeners) {
       listener.objectCountChanged();
     }
